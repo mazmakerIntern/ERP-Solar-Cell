@@ -1,0 +1,191 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: ภาพรวม
+          - link "Executive Dashboard" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e16]
+            - generic [ref=e21]: Executive Dashboard
+        - generic [ref=e22]:
+          - generic [ref=e23]: โมดูลหลัก
+          - link "Stock" [ref=e24] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e25]
+            - generic [ref=e29]: Stock
+          - link "Sales & Marketing" [ref=e30] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e31]
+            - generic [ref=e35]: Sales & Marketing
+            - img [ref=e36]
+          - link "Approval Workflow 1" [ref=e38] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e39]
+            - generic [ref=e42]: Approval Workflow
+            - generic [ref=e43]: "1"
+        - generic [ref=e44]:
+          - generic [ref=e45]: ระบบ
+          - link "Permission & User" [ref=e46] [cursor=pointer]:
+            - /url: /users
+            - img [ref=e47]
+            - generic [ref=e52]: Permission & User
+          - link "Peak Integration" [ref=e53] [cursor=pointer]:
+            - /url: /peak
+            - img [ref=e54]
+            - generic [ref=e56]: Peak Integration
+        - generic [ref=e57]:
+          - generic [ref=e58]: Quick Stats
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - generic [ref=e64]: ยอดขายวันนี้
+              - generic [ref=e65]: 84,320 ฿
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - generic [ref=e70]: รออนุมัติ
+              - generic [ref=e71]: 1 รายการ
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - generic [ref=e75]: สต็อกต่ำ
+              - generic [ref=e76]: 2 SKU
+      - generic [ref=e77]:
+        - button "ผู้บริหาร · Full Access" [ref=e79]:
+          - img [ref=e80]
+          - generic [ref=e82]: ผู้บริหาร
+          - generic [ref=e83]: · Full Access
+          - img [ref=e84]
+        - generic [ref=e87]:
+          - generic [ref=e88]: ผ
+          - generic [ref=e89]:
+            - generic [ref=e90]: ผู้บริหาร ระบบ
+            - generic [ref=e91]: admin@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e92]:
+            - img [ref=e93]
+    - main [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e99]:
+          - heading "Sales & Marketing" [level=1] [ref=e100]
+          - paragraph [ref=e101]: จัดการการขาย ลูกค้า คอมมิชชั่น และโปรโมชั่น
+        - generic [ref=e102]:
+          - button [ref=e103]:
+            - img [ref=e104]
+          - button "2" [ref=e108]:
+            - img [ref=e109]
+            - generic [ref=e112]: "2"
+          - generic [ref=e114]: จ. 14 มิ.ย. 2567
+          - generic "ผู้บริหาร ระบบ" [ref=e115] [cursor=pointer]: ผ
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - button "ใบสั่งขาย" [ref=e119]:
+              - img [ref=e120]
+              - text: ใบสั่งขาย
+            - button "ลูกค้า" [ref=e124]:
+              - img [ref=e125]
+              - text: ลูกค้า
+            - button "Tier Pricing" [ref=e130]:
+              - img [ref=e131]
+              - text: Tier Pricing
+            - button "Commission & KPI" [active] [ref=e135]:
+              - img [ref=e136]
+              - text: Commission & KPI
+            - button "โปรโมชั่น" [ref=e138]:
+              - img [ref=e139]
+              - text: โปรโมชั่น
+            - button "Credit Note" [ref=e142]:
+              - img [ref=e143]
+              - text: Credit Note
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - img [ref=e148]
+              - textbox "ค้นหา..." [ref=e151]
+            - generic [ref=e255]: ระบบสร้างให้อัตโนมัติ
+        - generic [ref=e256]:
+          - generic [ref=e257]:
+            - generic [ref=e258]:
+              - generic [ref=e260]: Confirmed
+              - generic [ref=e261]: 13,875 ฿
+            - generic [ref=e262]:
+              - generic [ref=e264]: Pending
+              - generic [ref=e265]: 6,200 ฿
+          - table [ref=e267]:
+            - rowgroup [ref=e268]:
+              - row "อ้างอิง SO เซลส์ แผนก อัตรา คอมมิชชั่น วันที่ สถานะ" [ref=e269]:
+                - columnheader "อ้างอิง SO" [ref=e270]
+                - columnheader "เซลส์" [ref=e271]
+                - columnheader "แผนก" [ref=e272]
+                - columnheader "อัตรา" [ref=e273]
+                - columnheader "คอมมิชชั่น" [ref=e274]
+                - columnheader "วันที่" [ref=e275]
+                - columnheader "สถานะ" [ref=e276]
+            - rowgroup [ref=e277]:
+              - row "SO2406015 วิภา สุขใจ แผง 5% 1,200 ฿ 2024-06-14 ยืนยันแล้ว" [ref=e278]:
+                - cell "SO2406015" [ref=e279]
+                - cell "วิภา สุขใจ" [ref=e280]
+                - cell "แผง" [ref=e281]:
+                  - generic [ref=e282]: แผง
+                - cell "5%" [ref=e283]
+                - cell "1,200 ฿" [ref=e284]
+                - cell "2024-06-14" [ref=e285]
+                - cell "ยืนยันแล้ว" [ref=e286]:
+                  - generic [ref=e287]: ยืนยันแล้ว
+              - row "SO2406014 วิภา สุขใจ อินเวอร์เตอร์ 4.5% 4,725 ฿ 2024-06-13 ยืนยันแล้ว" [ref=e288]:
+                - cell "SO2406014" [ref=e289]
+                - cell "วิภา สุขใจ" [ref=e290]
+                - cell "อินเวอร์เตอร์" [ref=e291]:
+                  - generic [ref=e292]: อินเวอร์เตอร์
+                - cell "4.5%" [ref=e293]
+                - cell "4,725 ฿" [ref=e294]
+                - cell "2024-06-13" [ref=e295]
+                - cell "ยืนยันแล้ว" [ref=e296]:
+                  - generic [ref=e297]: ยืนยันแล้ว
+              - row "SO2406014 วิภา สุขใจ แบตเตอรี่ 3% 2,400 ฿ 2024-06-13 ยืนยันแล้ว" [ref=e298]:
+                - cell "SO2406014" [ref=e299]
+                - cell "วิภา สุขใจ" [ref=e300]
+                - cell "แบตเตอรี่" [ref=e301]:
+                  - generic [ref=e302]: แบตเตอรี่
+                - cell "3%" [ref=e303]
+                - cell "2,400 ฿" [ref=e304]
+                - cell "2024-06-13" [ref=e305]
+                - cell "ยืนยันแล้ว" [ref=e306]:
+                  - generic [ref=e307]: ยืนยันแล้ว
+              - row "SO2406013 สมศักดิ์ รักดี แผง 5% 6,200 ฿ 2024-06-13 รออนุมัติ" [ref=e308]:
+                - cell "SO2406013" [ref=e309]
+                - cell "สมศักดิ์ รักดี" [ref=e310]
+                - cell "แผง" [ref=e311]:
+                  - generic [ref=e312]: แผง
+                - cell "5%" [ref=e313]
+                - cell "6,200 ฿" [ref=e314]
+                - cell "2024-06-13" [ref=e315]
+                - cell "รออนุมัติ" [ref=e316]:
+                  - generic [ref=e317]: รออนุมัติ
+              - row "SO2406012 วิภา สุขใจ แบตเตอรี่ 5% 5,550 ฿ 2024-06-12 ยืนยันแล้ว" [ref=e318]:
+                - cell "SO2406012" [ref=e319]
+                - cell "วิภา สุขใจ" [ref=e320]
+                - cell "แบตเตอรี่" [ref=e321]:
+                  - generic [ref=e322]: แบตเตอรี่
+                - cell "5%" [ref=e323]
+                - cell "5,550 ฿" [ref=e324]
+                - cell "2024-06-12" [ref=e325]
+                - cell "ยืนยันแล้ว" [ref=e326]:
+                  - generic [ref=e327]: ยืนยันแล้ว
+              - row "SO2406011 สมศักดิ์ รักดี แผง 5% 2,750 ฿ 2024-06-11 ยกเลิก" [ref=e328]:
+                - cell "SO2406011" [ref=e329]
+                - cell "สมศักดิ์ รักดี" [ref=e330]
+                - cell "แผง" [ref=e331]:
+                  - generic [ref=e332]: แผง
+                - cell "5%" [ref=e333]
+                - cell "2,750 ฿" [ref=e334]
+                - cell "2024-06-11" [ref=e335]
+                - cell "ยกเลิก" [ref=e336]:
+                  - generic [ref=e337]: ยกเลิก
+  - button "Open Next.js Dev Tools" [ref=e251] [cursor=pointer]:
+    - img [ref=e252]
+  - alert [ref=e338]

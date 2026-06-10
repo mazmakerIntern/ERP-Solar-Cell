@@ -1,0 +1,160 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: โมดูลหลัก
+          - link "Stock" [ref=e24] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e25]
+            - generic [ref=e29]: Stock
+          - link "Sales & Marketing" [ref=e32] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e33]
+            - generic [ref=e37]: Sales & Marketing
+            - img [ref=e403]
+          - link "Approval Workflow" [ref=e405] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e39]
+            - generic [ref=e42]: Approval Workflow
+        - generic [ref=e57]:
+          - generic [ref=e58]: Quick Stats
+          - generic [ref=e59]:
+            - generic [ref=e406]:
+              - img [ref=e407]
+              - generic [ref=e410]: ยอดขายฉัน (เดือน)
+              - generic [ref=e411]: 289,970 ฿
+            - generic [ref=e412]:
+              - img [ref=e413]
+              - generic [ref=e415]: คอมมิชชั่นฉัน
+              - generic [ref=e416]: 13,675 ฿
+            - generic [ref=e417]:
+              - img [ref=e418]
+              - generic [ref=e423]: ลูกค้าของฉัน
+              - generic [ref=e424]: 3 ราย
+      - generic [ref=e77]:
+        - button "เซลส์ · ฝ่ายขาย" [ref=e425]:
+          - img [ref=e426]
+          - generic [ref=e82]: เซลส์
+          - generic [ref=e83]: · ฝ่ายขาย
+          - img [ref=e84]
+        - generic [ref=e87]:
+          - generic [ref=e88]: ว
+          - generic [ref=e89]:
+            - generic [ref=e90]: วิภา สุขใจ
+            - generic [ref=e91]: wipa@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e92]:
+            - img [ref=e93]
+    - main [ref=e96]:
+      - generic [ref=e429]:
+        - generic [ref=e431]:
+          - heading "Sales & Marketing" [level=1] [ref=e432]
+          - paragraph [ref=e433]: จัดการการขาย ลูกค้า คอมมิชชั่น และโปรโมชั่น
+        - generic [ref=e434]:
+          - button [ref=e435]:
+            - img [ref=e436]
+          - button "1" [ref=e440]:
+            - img [ref=e441]
+            - generic [ref=e444]: "1"
+          - generic [ref=e446]: จ. 14 มิ.ย. 2567
+          - generic "วิภา สุขใจ" [ref=e447] [cursor=pointer]: ว
+      - generic [ref=e448]:
+        - generic [ref=e449]:
+          - img [ref=e450]
+          - generic [ref=e452]: คุณกำลังดูในมุมมอง เซลส์ — เห็นเฉพาะลูกค้า ใบสั่งขาย และคอมมิชชั่นของ วิภา สุขใจ เท่านั้น
+        - generic [ref=e453]:
+          - generic [ref=e454]:
+            - button "ใบสั่งขาย" [ref=e455]:
+              - img [ref=e456]
+              - text: ใบสั่งขาย
+            - button "ลูกค้า" [ref=e460]:
+              - img [ref=e461]
+              - text: ลูกค้า
+            - button "Tier Pricing" [ref=e466]:
+              - img [ref=e467]
+              - text: Tier Pricing
+            - button "Commission & KPI" [ref=e471]:
+              - img [ref=e472]
+              - text: Commission & KPI
+            - button "โปรโมชั่น" [ref=e474]:
+              - img [ref=e475]
+              - text: โปรโมชั่น
+            - button "Credit Note" [ref=e478]:
+              - img [ref=e479]
+              - text: Credit Note
+          - generic [ref=e482]:
+            - generic [ref=e483]:
+              - img [ref=e484]
+              - textbox "ค้นหา..." [ref=e487]
+            - button "สร้างใบสั่งขาย" [ref=e488]:
+              - img [ref=e489]
+              - text: สร้างใบสั่งขาย
+        - table [ref=e492]:
+          - rowgroup [ref=e493]:
+            - row "เลข SO ลูกค้า Tier มูลค่า ส่วนลด VAT ยอดรวม เซลส์ วันที่ Invoice สถานะ" [ref=e494]:
+              - columnheader "เลข SO" [ref=e495]
+              - columnheader "ลูกค้า" [ref=e496]
+              - columnheader "Tier" [ref=e497]
+              - columnheader "มูลค่า" [ref=e498]
+              - columnheader "ส่วนลด" [ref=e499]
+              - columnheader "VAT" [ref=e500]
+              - columnheader "ยอดรวม" [ref=e501]
+              - columnheader "เซลส์" [ref=e502]
+              - columnheader "วันที่" [ref=e503]
+              - columnheader "Invoice" [ref=e504]
+              - columnheader "สถานะ" [ref=e505]
+          - rowgroup [ref=e506]:
+            - row "SO2406015 บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด Dealer 24,000 ฿ — 1,680 ฿ 25,680 ฿ วิภา สุขใจ 2024-06-14 ส่ง Peak แล้ว ปิดแล้ว" [ref=e507] [cursor=pointer]:
+              - cell "SO2406015" [ref=e508]
+              - cell "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด" [ref=e509]
+              - cell "Dealer" [ref=e510]:
+                - generic [ref=e511]: Dealer
+              - cell "24,000 ฿" [ref=e512]
+              - cell "—" [ref=e513]
+              - cell "1,680 ฿" [ref=e514]
+              - cell "25,680 ฿" [ref=e515]
+              - cell "วิภา สุขใจ" [ref=e516]
+              - cell "2024-06-14" [ref=e517]
+              - cell "ส่ง Peak แล้ว" [ref=e518]:
+                - generic [ref=e519]: ส่ง Peak แล้ว
+              - cell "ปิดแล้ว" [ref=e520]:
+                - generic [ref=e521]: ปิดแล้ว
+            - row "SO2406014 ห้างหุ้นส่วน สยามกรีน ผู้รับเหมา 143,000 ฿ 5,000 ฿ 9,660 ฿ 147,660 ฿ วิภา สุขใจ 2024-06-13 ส่ง Peak แล้ว ปิดแล้ว" [ref=e522] [cursor=pointer]:
+              - cell "SO2406014" [ref=e523]
+              - cell "ห้างหุ้นส่วน สยามกรีน" [ref=e524]
+              - cell "ผู้รับเหมา" [ref=e525]:
+                - generic [ref=e526]: ผู้รับเหมา
+              - cell "143,000 ฿" [ref=e527]
+              - cell "5,000 ฿" [ref=e528]
+              - cell "9,660 ฿" [ref=e529]
+              - cell "147,660 ฿" [ref=e530]
+              - cell "วิภา สุขใจ" [ref=e531]
+              - cell "2024-06-13" [ref=e532]
+              - cell "ส่ง Peak แล้ว" [ref=e533]:
+                - generic [ref=e534]: ส่ง Peak แล้ว
+              - cell "ปิดแล้ว" [ref=e535]:
+                - generic [ref=e536]: ปิดแล้ว
+            - row "SO2406012 บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด Dealer 111,000 ฿ 2,000 ฿ 7,630 ฿ 116,630 ฿ วิภา สุขใจ 2024-06-12 ส่ง Peak แล้ว ปิดแล้ว" [ref=e537] [cursor=pointer]:
+              - cell "SO2406012" [ref=e538]
+              - cell "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด" [ref=e539]
+              - cell "Dealer" [ref=e540]:
+                - generic [ref=e541]: Dealer
+              - cell "111,000 ฿" [ref=e542]
+              - cell "2,000 ฿" [ref=e543]
+              - cell "7,630 ฿" [ref=e544]
+              - cell "116,630 ฿" [ref=e545]
+              - cell "วิภา สุขใจ" [ref=e546]
+              - cell "2024-06-12" [ref=e547]
+              - cell "ส่ง Peak แล้ว" [ref=e548]:
+                - generic [ref=e549]: ส่ง Peak แล้ว
+              - cell "ปิดแล้ว" [ref=e550]:
+                - generic [ref=e551]: ปิดแล้ว
+  - button "Open Next.js Dev Tools" [ref=e317] [cursor=pointer]:
+    - img [ref=e318]
+  - alert [ref=e366]

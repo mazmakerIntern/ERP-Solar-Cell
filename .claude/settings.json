@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Intern/ERP-Solar/demo-erp-solar/**)",
+      "PowerShell(Get-ChildItem \"d:\\\\Intern\\\\ERP-Solar\\\\demo-erp-solar\\\\src\" -Recurse | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"d:\\\\Intern\\\\ERP-Solar\\\\demo-erp-solar\\\\\", \"\"\\) })",
+      "Bash(curl -s http://localhost:3000 -o /dev/null -w \"%{http_code}\")",
+      "PowerShell(cd \"d:\\\\Intern\\\\ERP-Solar\\\\demo-erp-solar\"; $job = Start-Job -ScriptBlock { Set-Location \"d:\\\\Intern\\\\ERP-Solar\\\\demo-erp-solar\"; & node node_modules\\\\.bin\\\\next dev 2>&1 }; Start-Sleep -Seconds 8; Receive-Job $job -Keep | Select-Object -Last 10; $job.Id)",
+      "Bash(node node_modules\\\\next\\\\dist\\\\bin\\\\next build)",
+      "Bash(node \"node_modules/next/dist/bin/next\" build)",
+      "PowerShell(Start-Process -FilePath \"node.exe\" -ArgumentList \"D:\\\\Intern\\\\ERP-Solar\\\\Demo-ERP-Solar\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"dev\",\"--port\",\"3099\" -WorkingDirectory \"D:\\\\Intern\\\\ERP-Solar\\\\Demo-ERP-Solar\" -WindowStyle Hidden)",
+      "mcp__playwright__browser_navigate",
+      "Bash(npm run *)"
+    ],
+    "additionalDirectories": [
+      "d:\\Intern\\ERP-Solar\\demo-erp-solar\\src\\app",
+      "d:\\Intern\\ERP-Solar\\demo-erp-solar\\src\\lib",
+      "d:\\Intern\\ERP-Solar\\demo-erp-solar\\src\\components\\ui",
+      "d:\\Intern\\ERP-Solar\\demo-erp-solar\\src\\components\\layout"
+    ]
+  }
+}

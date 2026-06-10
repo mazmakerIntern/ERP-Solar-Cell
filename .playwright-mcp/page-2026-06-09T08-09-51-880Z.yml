@@ -1,0 +1,191 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: ภาพรวม
+          - link "Executive Dashboard" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e16]
+            - generic [ref=e21]: Executive Dashboard
+        - generic [ref=e22]:
+          - generic [ref=e23]: โมดูลหลัก
+          - link "Stock" [ref=e24] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e25]
+            - generic [ref=e29]: Stock
+          - link "Sales & Marketing" [ref=e30] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e31]
+            - generic [ref=e35]: Sales & Marketing
+            - img [ref=e36]
+          - link "Approval Workflow 1" [ref=e38] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e39]
+            - generic [ref=e42]: Approval Workflow
+            - generic [ref=e43]: "1"
+        - generic [ref=e44]:
+          - generic [ref=e45]: ระบบ
+          - link "Permission & User" [ref=e46] [cursor=pointer]:
+            - /url: /users
+            - img [ref=e47]
+            - generic [ref=e52]: Permission & User
+          - link "Peak Integration" [ref=e53] [cursor=pointer]:
+            - /url: /peak
+            - img [ref=e54]
+            - generic [ref=e56]: Peak Integration
+        - generic [ref=e57]:
+          - generic [ref=e58]: Quick Stats
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - generic [ref=e64]: ยอดขายวันนี้
+              - generic [ref=e65]: 84,320 ฿
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - generic [ref=e70]: รออนุมัติ
+              - generic [ref=e71]: 1 รายการ
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - generic [ref=e75]: สต็อกต่ำ
+              - generic [ref=e76]: 2 SKU
+      - generic [ref=e77]:
+        - generic [ref=e79]:
+          - generic [ref=e81]: ผู้บริหาร
+          - generic [ref=e82]: Full Access
+        - generic [ref=e83]:
+          - generic [ref=e84]: ผ
+          - generic [ref=e85]:
+            - generic [ref=e86]: ผู้บริหาร ระบบ
+            - generic [ref=e87]: admin@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e88]:
+            - img [ref=e89]
+    - main [ref=e92]:
+      - generic [ref=e93]:
+        - generic [ref=e95]:
+          - heading "Sales & Marketing" [level=1] [ref=e96]
+          - paragraph [ref=e97]: จัดการการขาย ลูกค้า คอมมิชชั่น และโปรโมชั่น
+        - generic [ref=e98]:
+          - button [ref=e99]:
+            - img [ref=e100]
+          - button "2" [ref=e104]:
+            - img [ref=e105]
+            - generic [ref=e108]: "2"
+          - generic [ref=e110]: จ. 14 มิ.ย. 2567
+          - generic [ref=e111] [cursor=pointer]: ผ
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - button "ใบสั่งขาย" [ref=e115]:
+              - img [ref=e116]
+              - text: ใบสั่งขาย
+            - button "ลูกค้า" [ref=e120]:
+              - img [ref=e121]
+              - text: ลูกค้า
+            - button "Tier Pricing" [active] [ref=e126]:
+              - img [ref=e127]
+              - text: Tier Pricing
+            - button "Commission & KPI" [ref=e131]:
+              - img [ref=e132]
+              - text: Commission & KPI
+            - button "โปรโมชั่น" [ref=e134]:
+              - img [ref=e135]
+              - text: โปรโมชั่น
+            - button "Credit Note" [ref=e138]:
+              - img [ref=e139]
+              - text: Credit Note
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - img [ref=e144]
+              - textbox "ค้นหา..." [ref=e147]
+            - button "แก้ราคา Tier" [ref=e251]:
+              - img [ref=e149]
+              - text: แก้ราคา Tier
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - generic [ref=e254]: Tier Price เป็นราคาฐาน · Promotion ซ้อนเพิ่มได้ · ราคาสุดท้ายห้ามต่ำกว่า Floor Price
+            - generic [ref=e255]:
+              - generic [ref=e258]: ทั่วไป
+              - generic [ref=e261]: ผู้รับเหมา
+              - generic [ref=e264]: Dealer
+              - generic [ref=e267]: Founder
+          - table [ref=e269]:
+            - rowgroup [ref=e270]:
+              - row "สินค้า ต้นทุนเฉลี่ย Floor Price ทั่วไป ผู้รับเหมา Dealer Founder" [ref=e271]:
+                - columnheader "สินค้า" [ref=e272]
+                - columnheader "ต้นทุนเฉลี่ย" [ref=e273]
+                - columnheader "Floor Price" [ref=e274]
+                - columnheader "ทั่วไป" [ref=e275]
+                - columnheader "ผู้รับเหมา" [ref=e276]
+                - columnheader "Dealer" [ref=e277]
+                - columnheader "Founder" [ref=e278]
+            - rowgroup [ref=e279]:
+              - row "แผงโซลาร์ Mono 400W SC-MON-400W 4,200 ฿ 4,400 ฿ 5,500 ฿ 5,200 ฿ 4,800 ฿ 4,500 ฿" [ref=e280]:
+                - cell "แผงโซลาร์ Mono 400W SC-MON-400W" [ref=e281]:
+                  - generic [ref=e282]: แผงโซลาร์ Mono 400W
+                  - generic [ref=e283]: SC-MON-400W
+                - cell "4,200 ฿" [ref=e284]
+                - cell "4,400 ฿" [ref=e285]
+                - cell "5,500 ฿" [ref=e286]
+                - cell "5,200 ฿" [ref=e287]
+                - cell "4,800 ฿" [ref=e288]
+                - cell "4,500 ฿" [ref=e289]
+              - row "แผงโซลาร์ Mono 550W SC-MON-550W 5,800 ฿ 6,000 ฿ 7,500 ฿ 7,100 ฿ 6,600 ฿ 6,200 ฿" [ref=e290]:
+                - cell "แผงโซลาร์ Mono 550W SC-MON-550W" [ref=e291]:
+                  - generic [ref=e292]: แผงโซลาร์ Mono 550W
+                  - generic [ref=e293]: SC-MON-550W
+                - cell "5,800 ฿" [ref=e294]
+                - cell "6,000 ฿" [ref=e295]
+                - cell "7,500 ฿" [ref=e296]
+                - cell "7,100 ฿" [ref=e297]
+                - cell "6,600 ฿" [ref=e298]
+                - cell "6,200 ฿" [ref=e299]
+              - row "อินเวอร์เตอร์ Hybrid 5kW INV-5KW-HYB 28,000 ฿ 29,500 ฿ 36,000 ฿ 34,000 ฿ 31,500 ฿ 30,000 ฿" [ref=e300]:
+                - cell "อินเวอร์เตอร์ Hybrid 5kW INV-5KW-HYB" [ref=e301]:
+                  - generic [ref=e302]: อินเวอร์เตอร์ Hybrid 5kW
+                  - generic [ref=e303]: INV-5KW-HYB
+                - cell "28,000 ฿" [ref=e304]
+                - cell "29,500 ฿" [ref=e305]
+                - cell "36,000 ฿" [ref=e306]
+                - cell "34,000 ฿" [ref=e307]
+                - cell "31,500 ฿" [ref=e308]
+                - cell "30,000 ฿" [ref=e309]
+              - row "อินเวอร์เตอร์ Hybrid 10kW INV-10KW-HYB 52,000 ฿ 54,000 ฿ 68,000 ฿ 64,000 ฿ 60,000 ฿ 57,000 ฿" [ref=e310]:
+                - cell "อินเวอร์เตอร์ Hybrid 10kW INV-10KW-HYB" [ref=e311]:
+                  - generic [ref=e312]: อินเวอร์เตอร์ Hybrid 10kW
+                  - generic [ref=e313]: INV-10KW-HYB
+                - cell "52,000 ฿" [ref=e314]
+                - cell "54,000 ฿" [ref=e315]
+                - cell "68,000 ฿" [ref=e316]
+                - cell "64,000 ฿" [ref=e317]
+                - cell "60,000 ฿" [ref=e318]
+                - cell "57,000 ฿" [ref=e319]
+              - row "แบตเตอรี่ Lithium 100Ah BAT-LI-100AH 18,000 ฿ 18,800 ฿ 23,000 ฿ 21,500 ฿ 20,000 ฿ 19,000 ฿" [ref=e320]:
+                - cell "แบตเตอรี่ Lithium 100Ah BAT-LI-100AH" [ref=e321]:
+                  - generic [ref=e322]: แบตเตอรี่ Lithium 100Ah
+                  - generic [ref=e323]: BAT-LI-100AH
+                - cell "18,000 ฿" [ref=e324]
+                - cell "18,800 ฿" [ref=e325]
+                - cell "23,000 ฿" [ref=e326]
+                - cell "21,500 ฿" [ref=e327]
+                - cell "20,000 ฿" [ref=e328]
+                - cell "19,000 ฿" [ref=e329]
+              - row "แบตเตอรี่ Lithium 200Ah BAT-LI-200AH 35,000 ฿ 36,500 ฿ 45,000 ฿ 42,000 ฿ 39,000 ฿ 37,000 ฿" [ref=e330]:
+                - cell "แบตเตอรี่ Lithium 200Ah BAT-LI-200AH" [ref=e331]:
+                  - generic [ref=e332]: แบตเตอรี่ Lithium 200Ah
+                  - generic [ref=e333]: BAT-LI-200AH
+                - cell "35,000 ฿" [ref=e334]
+                - cell "36,500 ฿" [ref=e335]
+                - cell "45,000 ฿" [ref=e336]
+                - cell "42,000 ฿" [ref=e337]
+                - cell "39,000 ฿" [ref=e338]
+                - cell "37,000 ฿" [ref=e339]
+  - button "Open Next.js Dev Tools" [ref=e247] [cursor=pointer]:
+    - img [ref=e248]
+  - alert [ref=e340]

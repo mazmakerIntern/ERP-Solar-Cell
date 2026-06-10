@@ -1,0 +1,84 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: โมดูลหลัก
+          - link "Stock" [ref=e26] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e27]
+            - generic [ref=e31]: Stock
+          - link "Sales & Marketing" [ref=e32] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e33]
+            - generic [ref=e37]: Sales & Marketing
+          - link "Approval Workflow" [ref=e317] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e39]
+            - generic [ref=e42]: Approval Workflow
+        - generic [ref=e57]:
+          - generic [ref=e58]: Quick Stats
+          - generic [ref=e59]:
+            - generic [ref=e318]:
+              - img [ref=e319]
+              - generic [ref=e322]: ยอดขายฉัน (เดือน)
+              - generic [ref=e323]: 289,970 ฿
+            - generic [ref=e324]:
+              - img [ref=e325]
+              - generic [ref=e327]: คอมมิชชั่นฉัน
+              - generic [ref=e328]: 13,675 ฿
+            - generic [ref=e329]:
+              - img [ref=e330]
+              - generic [ref=e335]: ลูกค้าของฉัน
+              - generic [ref=e336]: 3 ราย
+      - generic [ref=e77]:
+        - generic [ref=e338]:
+          - generic [ref=e339]: สลับมุมมอง (Demo)
+          - button "ผู้บริหาร Full Access" [ref=e340]:
+            - img [ref=e342]
+            - generic [ref=e344]:
+              - generic [ref=e345]: ผู้บริหาร
+              - generic [ref=e346]: Full Access
+          - button "เซลส์ ฝ่ายขาย" [ref=e347]:
+            - img [ref=e349]
+            - generic [ref=e352]:
+              - generic [ref=e353]: เซลส์
+              - generic [ref=e354]: ฝ่ายขาย
+            - img [ref=e355]
+          - button "สต็อก คลังสินค้า" [ref=e357]:
+            - img [ref=e359]
+            - generic [ref=e363]:
+              - generic [ref=e364]: สต็อก
+              - generic [ref=e365]: คลังสินค้า
+          - button "บัญชี การเงิน" [ref=e366]:
+            - img [ref=e368]
+            - generic [ref=e370]:
+              - generic [ref=e371]: บัญชี
+              - generic [ref=e372]: การเงิน
+        - button "เซลส์ · ฝ่ายขาย" [active] [ref=e373]:
+          - img [ref=e374]
+          - generic [ref=e82]: เซลส์
+          - generic [ref=e83]: · ฝ่ายขาย
+          - img [ref=e84]
+        - generic [ref=e87]:
+          - generic [ref=e88]: ว
+          - generic [ref=e89]:
+            - generic [ref=e90]: วิภา สุขใจ
+            - generic [ref=e91]: wipa@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e92]:
+            - img [ref=e93]
+    - main [ref=e96]:
+      - generic [ref=e377]:
+        - img [ref=e379]
+        - heading "ไม่มีสิทธิ์เข้าถึงหน้านี้" [level=2] [ref=e382]
+        - paragraph [ref=e383]: บัญชี เซลส์ ไม่ได้รับสิทธิ์เข้าถึงเมนูนี้ ตาม Permission Matrix ที่กำหนดในระบบ
+        - button "กลับหน้าหลักของฉัน" [ref=e384]
+  - button "Open Next.js Dev Tools" [ref=e313] [cursor=pointer]:
+    - img [ref=e314]
+  - alert [ref=e385]

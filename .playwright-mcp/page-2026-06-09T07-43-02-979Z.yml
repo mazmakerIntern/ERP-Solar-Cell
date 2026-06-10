@@ -1,0 +1,161 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]: ภาพรวม
+          - link "Executive Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+            - generic [ref=e19]: Executive Dashboard
+        - generic [ref=e20]:
+          - generic [ref=e21]: โมดูลหลัก
+          - link "Stock" [ref=e22] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e23]
+            - generic [ref=e27]: Stock
+          - link "Sales & Marketing" [ref=e28] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e29]
+            - generic [ref=e33]: Sales & Marketing
+          - link "Approval Workflow" [ref=e34] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e35]
+            - generic [ref=e38]: Approval Workflow
+            - img [ref=e39]
+        - generic [ref=e41]:
+          - generic [ref=e42]: ระบบ
+          - link "Permission & User" [ref=e43] [cursor=pointer]:
+            - /url: /users
+            - img [ref=e44]
+            - generic [ref=e49]: Permission & User
+          - link "Peak Integration" [ref=e50] [cursor=pointer]:
+            - /url: /peak
+            - img [ref=e51]
+            - generic [ref=e53]: Peak Integration
+      - generic [ref=e55]:
+        - generic [ref=e56]: ผ
+        - generic [ref=e57]:
+          - generic [ref=e58]: ผู้บริหาร ระบบ
+          - generic [ref=e59]: ผู้บริหาร
+        - img [ref=e60] [cursor=pointer]
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - heading "Approval Workflow" [level=1] [ref=e66]
+          - paragraph [ref=e67]: ระบบอนุมัติเอกสารและคำขอต่าง ๆ ในองค์กร
+        - generic [ref=e68]:
+          - button [ref=e69]:
+            - img [ref=e70]
+          - button [ref=e73]:
+            - img [ref=e74]
+          - generic [ref=e78]: 14 มิ.ย. 2567
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - img [ref=e83]
+            - generic [ref=e86]:
+              - generic [ref=e87]: "1"
+              - generic [ref=e88]: รออนุมัติ
+          - generic [ref=e89]:
+            - img [ref=e91]
+            - generic [ref=e94]:
+              - generic [ref=e95]: "3"
+              - generic [ref=e96]: อนุมัติแล้ว
+          - generic [ref=e97]:
+            - img [ref=e99]
+            - generic [ref=e103]:
+              - generic [ref=e104]: "1"
+              - generic [ref=e105]: ปฏิเสธ
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - button "ทั้งหมด" [ref=e109]
+            - button "รออนุมัติ" [ref=e110]
+            - button "อนุมัติแล้ว" [ref=e111]
+            - button "ปฏิเสธ" [ref=e112]
+          - generic [ref=e113]:
+            - generic [ref=e114] [cursor=pointer]:
+              - img [ref=e116]
+              - generic [ref=e118]:
+                - generic [ref=e119]:
+                  - generic [ref=e120]: ส่วนลดเกินสิทธิ์
+                  - generic [ref=e121]: รออนุมัติ
+                - generic [ref=e122]: ขอส่วนลด 8% เกินเพดาน 5%
+                - generic [ref=e123]:
+                  - generic [ref=e124]: "อ้างอิง: SO2406013"
+                  - generic [ref=e125]: ·
+                  - generic [ref=e126]: "โดย: สมศักดิ์ รักดี"
+                  - generic [ref=e127]: ·
+                  - generic [ref=e128]: 2024-06-13 10:30
+                  - generic [ref=e129]: ·
+                  - generic [ref=e130]: 9,920 ฿
+              - generic [ref=e131]:
+                - button "อนุมัติ" [ref=e132]
+                - button "ปฏิเสธ" [ref=e133]
+            - generic [ref=e134] [cursor=pointer]:
+              - img [ref=e136]
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - generic [ref=e141]: รับสินค้าเข้าคลัง
+                  - generic [ref=e142]: อนุมัติแล้ว
+                - generic [ref=e143]: รับอินเวอร์เตอร์ 8 เครื่อง (จาก PO 10 เครื่อง)
+                - generic [ref=e144]:
+                  - generic [ref=e145]: "อ้างอิง: PO2406002"
+                  - generic [ref=e146]: ·
+                  - generic [ref=e147]: "โดย: สมหญิง วงศ์ดี"
+                  - generic [ref=e148]: ·
+                  - generic [ref=e149]: 2024-06-14 08:00
+                  - generic [ref=e150]: ·
+                  - generic [ref=e151]: 220,000 ฿
+            - generic [ref=e152] [cursor=pointer]:
+              - img [ref=e154]
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - generic [ref=e159]: ปรับยอดสต็อก
+                  - generic [ref=e160]: อนุมัติแล้ว
+                - generic [ref=e161]: ตรวจนับโครงอะลูมิเนียม พบขาด 10 ชิ้น
+                - generic [ref=e162]:
+                  - generic [ref=e163]: "อ้างอิง: ADJ2406003"
+                  - generic [ref=e164]: ·
+                  - generic [ref=e165]: "โดย: สมชาย ใจดี"
+                  - generic [ref=e166]: ·
+                  - generic [ref=e167]: 2024-06-13 14:00
+                  - generic [ref=e168]: ·
+                  - generic [ref=e169]: 1,800 ฿
+            - generic [ref=e170] [cursor=pointer]:
+              - img [ref=e172]
+              - generic [ref=e176]:
+                - generic [ref=e177]:
+                  - generic [ref=e178]: คืนสินค้าเกิน Return Period
+                  - generic [ref=e179]: ปฏิเสธ
+                - generic [ref=e180]: ลูกค้าขอคืนแผง 3 แผ่น — เกิน 30 วัน (35 วัน)
+                - generic [ref=e181]:
+                  - generic [ref=e182]: "อ้างอิง: RET2406002"
+                  - generic [ref=e183]: ·
+                  - generic [ref=e184]: "โดย: วิภา สุขใจ"
+                  - generic [ref=e185]: ·
+                  - generic [ref=e186]: 2024-06-12 09:00
+                  - generic [ref=e187]: ·
+                  - generic [ref=e188]: 16,500 ฿
+            - generic [ref=e189] [cursor=pointer]:
+              - img [ref=e191]
+              - generic [ref=e193]:
+                - generic [ref=e194]:
+                  - generic [ref=e195]: บิลใหญ่เกิน Threshold
+                  - generic [ref=e196]: อนุมัติแล้ว
+                - generic [ref=e197]: บิลมูลค่า 147,660 บาท เกิน Threshold 100,000 บาท
+                - generic [ref=e198]:
+                  - generic [ref=e199]: "อ้างอิง: SO2406014"
+                  - generic [ref=e200]: ·
+                  - generic [ref=e201]: "โดย: วิภา สุขใจ"
+                  - generic [ref=e202]: ·
+                  - generic [ref=e203]: 2024-06-13 16:00
+                  - generic [ref=e204]: ·
+                  - generic [ref=e205]: 147,660 ฿
+  - button "Open Next.js Dev Tools" [ref=e211] [cursor=pointer]:
+    - img [ref=e212]

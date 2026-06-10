@@ -1,0 +1,149 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: ภาพรวม
+          - link "Executive Dashboard" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e16]
+            - generic [ref=e21]: Executive Dashboard
+        - generic [ref=e22]:
+          - generic [ref=e23]: โมดูลหลัก
+          - link "Stock" [ref=e24] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e25]
+            - generic [ref=e29]: Stock
+          - link "Sales & Marketing" [ref=e30] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e31]
+            - generic [ref=e35]: Sales & Marketing
+          - link "Approval Workflow 1" [ref=e36] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e37]
+            - generic [ref=e40]: Approval Workflow
+            - generic [ref=e41]: "1"
+        - generic [ref=e42]:
+          - generic [ref=e43]: ระบบ
+          - link "Permission & User" [ref=e44] [cursor=pointer]:
+            - /url: /users
+            - img [ref=e45]
+            - generic [ref=e50]: Permission & User
+          - link "Peak Integration" [ref=e51] [cursor=pointer]:
+            - /url: /peak
+            - img [ref=e52]
+            - generic [ref=e54]: Peak Integration
+        - generic [ref=e55]:
+          - generic [ref=e56]: Quick Stats
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - img [ref=e59]
+              - generic [ref=e62]: ยอดขายวันนี้
+              - generic [ref=e63]: 84,320 ฿
+            - generic [ref=e64]:
+              - img [ref=e65]
+              - generic [ref=e68]: รออนุมัติ
+              - generic [ref=e69]: 1 รายการ
+            - generic [ref=e70]:
+              - img [ref=e71]
+              - generic [ref=e73]: สต็อกต่ำ
+              - generic [ref=e74]: 2 SKU
+      - generic [ref=e75]:
+        - generic [ref=e179]:
+          - generic [ref=e180]: สลับมุมมอง (Demo)
+          - button "ผู้บริหาร Full Access" [ref=e181]:
+            - img [ref=e183]
+            - generic [ref=e185]:
+              - generic [ref=e186]: ผู้บริหาร
+              - generic [ref=e187]: Full Access
+            - img [ref=e188]
+          - button "เซลส์ ฝ่ายขาย" [ref=e190]:
+            - img [ref=e192]
+            - generic [ref=e195]:
+              - generic [ref=e196]: เซลส์
+              - generic [ref=e197]: ฝ่ายขาย
+          - button "สต็อก คลังสินค้า" [ref=e198]:
+            - img [ref=e200]
+            - generic [ref=e204]:
+              - generic [ref=e205]: สต็อก
+              - generic [ref=e206]: คลังสินค้า
+          - button "บัญชี การเงิน" [ref=e207]:
+            - img [ref=e209]
+            - generic [ref=e211]:
+              - generic [ref=e212]: บัญชี
+              - generic [ref=e213]: การเงิน
+        - button "ผู้บริหาร · Full Access" [active] [ref=e77]:
+          - img [ref=e78]
+          - generic [ref=e80]: ผู้บริหาร
+          - generic [ref=e81]: · Full Access
+          - img [ref=e82]
+        - generic [ref=e85]:
+          - generic [ref=e86]: ผ
+          - generic [ref=e87]:
+            - generic [ref=e88]: ผู้บริหาร ระบบ
+            - generic [ref=e89]: admin@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e90]:
+            - img [ref=e91]
+    - main [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e97]:
+          - heading "Approval Workflow" [level=1] [ref=e98]
+          - paragraph [ref=e99]: ระบบอนุมัติเอกสารและคำขอต่าง ๆ ในองค์กร
+        - generic [ref=e100]:
+          - button [ref=e101]:
+            - img [ref=e102]
+          - button "2" [ref=e106]:
+            - img [ref=e107]
+            - generic [ref=e110]: "2"
+          - generic [ref=e112]: จ. 14 มิ.ย. 2567
+          - generic "ผู้บริหาร ระบบ" [ref=e113] [cursor=pointer]: ผ
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - img [ref=e118]
+            - generic [ref=e121]:
+              - generic [ref=e122]: "1"
+              - generic [ref=e123]: รออนุมัติ
+          - generic [ref=e124]:
+            - img [ref=e126]
+            - generic [ref=e129]:
+              - generic [ref=e130]: "3"
+              - generic [ref=e131]: อนุมัติแล้ว
+          - generic [ref=e132]:
+            - img [ref=e134]
+            - generic [ref=e138]:
+              - generic [ref=e139]: "1"
+              - generic [ref=e140]: ปฏิเสธ
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - button "ทั้งหมด" [ref=e144]
+            - button "รออนุมัติ" [ref=e145]
+            - button "อนุมัติแล้ว" [ref=e146]
+            - button "ปฏิเสธ" [ref=e147]
+          - generic [ref=e149] [cursor=pointer]:
+            - img [ref=e151]
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: ส่วนลดเกินสิทธิ์
+                - generic [ref=e156]: รออนุมัติ
+              - generic [ref=e157]: ขอส่วนลด 8% เกินเพดาน 5%
+              - generic [ref=e158]:
+                - generic [ref=e159]: "อ้างอิง: SO2406013"
+                - generic [ref=e160]: ·
+                - generic [ref=e161]: "โดย: สมศักดิ์ รักดี"
+                - generic [ref=e162]: ·
+                - generic [ref=e163]: 2024-06-13 10:30
+                - generic [ref=e164]: ·
+                - generic [ref=e165]: 9,920 ฿
+            - generic [ref=e166]:
+              - button "อนุมัติ" [ref=e167]
+              - button "ปฏิเสธ" [ref=e168]
+  - button "Open Next.js Dev Tools" [ref=e174] [cursor=pointer]:
+    - img [ref=e175]
+  - alert [ref=e214]

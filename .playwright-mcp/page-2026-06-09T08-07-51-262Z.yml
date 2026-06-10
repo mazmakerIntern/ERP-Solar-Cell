@@ -1,0 +1,247 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: Solarsell
+          - generic [ref=e9]: ERP System · v1.0
+        - generic "ระบบทำงานปกติ" [ref=e11]
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: ภาพรวม
+          - link "Executive Dashboard" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e16]
+            - generic [ref=e21]: Executive Dashboard
+        - generic [ref=e22]:
+          - generic [ref=e23]: โมดูลหลัก
+          - link "Stock" [ref=e24] [cursor=pointer]:
+            - /url: /stock
+            - img [ref=e25]
+            - generic [ref=e29]: Stock
+            - img [ref=e30]
+          - link "Sales & Marketing" [ref=e32] [cursor=pointer]:
+            - /url: /sales
+            - img [ref=e33]
+            - generic [ref=e37]: Sales & Marketing
+          - link "Approval Workflow 1" [ref=e38] [cursor=pointer]:
+            - /url: /approvals
+            - img [ref=e39]
+            - generic [ref=e42]: Approval Workflow
+            - generic [ref=e43]: "1"
+        - generic [ref=e44]:
+          - generic [ref=e45]: ระบบ
+          - link "Permission & User" [ref=e46] [cursor=pointer]:
+            - /url: /users
+            - img [ref=e47]
+            - generic [ref=e52]: Permission & User
+          - link "Peak Integration" [ref=e53] [cursor=pointer]:
+            - /url: /peak
+            - img [ref=e54]
+            - generic [ref=e56]: Peak Integration
+        - generic [ref=e57]:
+          - generic [ref=e58]: Quick Stats
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - generic [ref=e64]: ยอดขายวันนี้
+              - generic [ref=e65]: 84,320 ฿
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - generic [ref=e70]: รออนุมัติ
+              - generic [ref=e71]: 1 รายการ
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - generic [ref=e75]: สต็อกต่ำ
+              - generic [ref=e76]: 2 SKU
+      - generic [ref=e77]:
+        - generic [ref=e79]:
+          - generic [ref=e81]: ผู้บริหาร
+          - generic [ref=e82]: Full Access
+        - generic [ref=e83]:
+          - generic [ref=e84]: ผ
+          - generic [ref=e85]:
+            - generic [ref=e86]: ผู้บริหาร ระบบ
+            - generic [ref=e87]: admin@solarsell.co.th
+          - button "ออกจากระบบ" [ref=e88]:
+            - img [ref=e89]
+    - main [ref=e92]:
+      - generic [ref=e93]:
+        - generic [ref=e95]:
+          - heading "Stock Management" [level=1] [ref=e96]
+          - paragraph [ref=e97]: จัดการคลังสินค้า ผู้ขาย และการสั่งซื้อ
+        - generic [ref=e98]:
+          - button [ref=e99]:
+            - img [ref=e100]
+          - button "2" [ref=e104]:
+            - img [ref=e105]
+            - generic [ref=e108]: "2"
+          - generic [ref=e110]: จ. 14 มิ.ย. 2567
+          - generic [ref=e111] [cursor=pointer]: ผ
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - img [ref=e114]
+          - generic [ref=e116]:
+            - text: "สต็อกต่ำกว่า Reorder Point:"
+            - button "SC-MON-550W" [ref=e118]
+          - button "สั่งซื้อทันที" [ref=e119]
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - button "สินค้า" [ref=e122]:
+              - img [ref=e123]
+              - text: สินค้า
+            - button "ผู้ขาย" [ref=e127]:
+              - img [ref=e128]
+              - text: ผู้ขาย
+            - button "Purchase Order" [ref=e133]:
+              - img [ref=e134]
+              - text: Purchase Order
+            - button "Goods Receipt" [ref=e137]:
+              - img [ref=e138]
+              - text: Goods Receipt
+            - button "Stock Adjustment" [ref=e143]:
+              - img [ref=e144]
+              - text: Stock Adjustment
+            - button "Return Inspection" [ref=e145]:
+              - img [ref=e146]
+              - text: Return Inspection
+            - button "Movement Log" [ref=e149]:
+              - img [ref=e150]
+              - text: Movement Log
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - img [ref=e156]
+              - textbox "ค้นหา..." [ref=e159]
+            - button "เพิ่มใหม่" [ref=e160]:
+              - img [ref=e161]
+              - text: เพิ่มใหม่
+        - table [ref=e165]:
+          - rowgroup [ref=e166]:
+            - row "SKU ชื่อสินค้า หมวด ต้นทุนเฉลี่ย ราคา Tier 1 สต็อก Reorder สถานะ" [ref=e167]:
+              - columnheader "SKU" [ref=e168]
+              - columnheader "ชื่อสินค้า" [ref=e169]
+              - columnheader "หมวด" [ref=e170]
+              - columnheader "ต้นทุนเฉลี่ย" [ref=e171]
+              - columnheader "ราคา Tier 1" [ref=e172]
+              - columnheader "สต็อก" [ref=e173]
+              - columnheader "Reorder" [ref=e174]
+              - columnheader "สถานะ" [ref=e175]
+              - columnheader [ref=e176]
+          - rowgroup [ref=e177]:
+            - row "SC-MON-400W แผงโซลาร์ Mono 400W แผง 4,200 ฿ 5,500 ฿ 142 50 ใช้งาน" [ref=e178] [cursor=pointer]:
+              - cell "SC-MON-400W" [ref=e179]
+              - cell "แผงโซลาร์ Mono 400W" [ref=e180]
+              - cell "แผง" [ref=e181]:
+                - generic [ref=e182]: แผง
+              - cell "4,200 ฿" [ref=e183]
+              - cell "5,500 ฿" [ref=e184]
+              - cell "142" [ref=e185]:
+                - generic [ref=e187]: "142"
+              - cell "50" [ref=e188]
+              - cell "ใช้งาน" [ref=e189]:
+                - generic [ref=e190]: ใช้งาน
+              - cell [ref=e191]:
+                - img [ref=e192]
+            - row "SC-MON-550W แผงโซลาร์ Mono 550W แผง 5,800 ฿ 7,500 ฿ 28 40 ใช้งาน" [ref=e194] [cursor=pointer]:
+              - cell "SC-MON-550W" [ref=e195]
+              - cell "แผงโซลาร์ Mono 550W" [ref=e196]
+              - cell "แผง" [ref=e197]:
+                - generic [ref=e198]: แผง
+              - cell "5,800 ฿" [ref=e199]
+              - cell "7,500 ฿" [ref=e200]
+              - cell "28" [ref=e201]:
+                - generic [ref=e202]:
+                  - generic [ref=e203]: "28"
+                  - img [ref=e204]
+              - cell "40" [ref=e206]
+              - cell "ใช้งาน" [ref=e207]:
+                - generic [ref=e208]: ใช้งาน
+              - cell [ref=e209]:
+                - img [ref=e210]
+            - row "INV-5KW-HYB อินเวอร์เตอร์ Hybrid 5kW อินเวอร์เตอร์ 28,000 ฿ 36,000 ฿ 15 10 ใช้งาน" [ref=e212] [cursor=pointer]:
+              - cell "INV-5KW-HYB" [ref=e213]
+              - cell "อินเวอร์เตอร์ Hybrid 5kW" [ref=e214]
+              - cell "อินเวอร์เตอร์" [ref=e215]:
+                - generic [ref=e216]: อินเวอร์เตอร์
+              - cell "28,000 ฿" [ref=e217]
+              - cell "36,000 ฿" [ref=e218]
+              - cell "15" [ref=e219]:
+                - generic [ref=e221]: "15"
+              - cell "10" [ref=e222]
+              - cell "ใช้งาน" [ref=e223]:
+                - generic [ref=e224]: ใช้งาน
+              - cell [ref=e225]:
+                - img [ref=e226]
+            - row "INV-10KW-HYB อินเวอร์เตอร์ Hybrid 10kW อินเวอร์เตอร์ 52,000 ฿ 68,000 ฿ 8 5 ใช้งาน" [ref=e228] [cursor=pointer]:
+              - cell "INV-10KW-HYB" [ref=e229]
+              - cell "อินเวอร์เตอร์ Hybrid 10kW" [ref=e230]
+              - cell "อินเวอร์เตอร์" [ref=e231]:
+                - generic [ref=e232]: อินเวอร์เตอร์
+              - cell "52,000 ฿" [ref=e233]
+              - cell "68,000 ฿" [ref=e234]
+              - cell "8" [ref=e235]:
+                - generic [ref=e237]: "8"
+              - cell "5" [ref=e238]
+              - cell "ใช้งาน" [ref=e239]:
+                - generic [ref=e240]: ใช้งาน
+              - cell [ref=e241]:
+                - img [ref=e242]
+            - row "BAT-LI-100AH แบตเตอรี่ Lithium 100Ah แบตเตอรี่ 18,000 ฿ 23,000 ฿ 35 20 ใช้งาน" [ref=e244] [cursor=pointer]:
+              - cell "BAT-LI-100AH" [ref=e245]
+              - cell "แบตเตอรี่ Lithium 100Ah" [ref=e246]
+              - cell "แบตเตอรี่" [ref=e247]:
+                - generic [ref=e248]: แบตเตอรี่
+              - cell "18,000 ฿" [ref=e249]
+              - cell "23,000 ฿" [ref=e250]
+              - cell "35" [ref=e251]:
+                - generic [ref=e253]: "35"
+              - cell "20" [ref=e254]
+              - cell "ใช้งาน" [ref=e255]:
+                - generic [ref=e256]: ใช้งาน
+              - cell [ref=e257]:
+                - img [ref=e258]
+            - row "BAT-LI-200AH แบตเตอรี่ Lithium 200Ah แบตเตอรี่ 35,000 ฿ 45,000 ฿ 12 10 ใช้งาน" [ref=e260] [cursor=pointer]:
+              - cell "BAT-LI-200AH" [ref=e261]
+              - cell "แบตเตอรี่ Lithium 200Ah" [ref=e262]
+              - cell "แบตเตอรี่" [ref=e263]:
+                - generic [ref=e264]: แบตเตอรี่
+              - cell "35,000 ฿" [ref=e265]
+              - cell "45,000 ฿" [ref=e266]
+              - cell "12" [ref=e267]:
+                - generic [ref=e269]: "12"
+              - cell "10" [ref=e270]
+              - cell "ใช้งาน" [ref=e271]:
+                - generic [ref=e272]: ใช้งาน
+              - cell [ref=e273]:
+                - img [ref=e274]
+            - row "STR-ALUM-40 โครงอะลูมิเนียม 40mm โครงสร้าง 180 ฿ 250 ฿ 850 200 ใช้งาน" [ref=e276] [cursor=pointer]:
+              - cell "STR-ALUM-40" [ref=e277]
+              - cell "โครงอะลูมิเนียม 40mm" [ref=e278]
+              - cell "โครงสร้าง" [ref=e279]:
+                - generic [ref=e280]: โครงสร้าง
+              - cell "180 ฿" [ref=e281]
+              - cell "250 ฿" [ref=e282]
+              - cell "850" [ref=e283]:
+                - generic [ref=e285]: "850"
+              - cell "200" [ref=e286]
+              - cell "ใช้งาน" [ref=e287]:
+                - generic [ref=e288]: ใช้งาน
+              - cell [ref=e289]:
+                - img [ref=e290]
+            - row "CAB-4MM-RED สายไฟ 4mm² แดง (m) สายไฟ 22 ฿ 32 ฿ 5,200 1,000 ใช้งาน" [ref=e292] [cursor=pointer]:
+              - cell "CAB-4MM-RED" [ref=e293]
+              - cell "สายไฟ 4mm² แดง (m)" [ref=e294]
+              - cell "สายไฟ" [ref=e295]:
+                - generic [ref=e296]: สายไฟ
+              - cell "22 ฿" [ref=e297]
+              - cell "32 ฿" [ref=e298]
+              - cell "5,200" [ref=e299]:
+                - generic [ref=e301]: 5,200
+              - cell "1,000" [ref=e302]
+              - cell "ใช้งาน" [ref=e303]:
+                - generic [ref=e304]: ใช้งาน
+              - cell [ref=e305]:
+                - img [ref=e306]
+  - button "Open Next.js Dev Tools" [ref=e313] [cursor=pointer]:
+    - img [ref=e314]
