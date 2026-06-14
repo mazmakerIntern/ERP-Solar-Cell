@@ -6,16 +6,40 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebar-context";
 import { useRole, ROLE_CONFIG, type Role } from "./role-context";
+import { useSalesNav, tabsFor, type SalesTab, type SalesModule } from "./sales-nav-context";
+import { useStockNav, type StockTab } from "./stock-nav-context";
+import { useErpStore } from "./erp-store-context";
 import {
-  LayoutDashboard, Package, ShoppingCart, Users, CheckSquare,
+  LayoutDashboard, Package, ShoppingCart, Megaphone, Users, CheckSquare,
   Zap, ChevronRight, LogOut, X, Check, ChevronsUpDown,
 } from "lucide-react";
 import { mockApprovals } from "@/lib/mock-data";
 
+// เมนูย่อยใต้ Stock (สต๊อก + บัญชี) — Movement Log อยู่ท้ายสุด
+const STOCK_SUBTABS: { key: StockTab; label: string }[] = [
+  { key: "products", label: "สินค้า" },
+  { key: "suppliers", label: "ผู้ขาย" },
+  { key: "po", label: "Purchase Order" },
+  { key: "gr", label: "Goods Receipt" },
+  { key: "adjust", label: "Stock Adjustment" },
+  { key: "return", label: "Return Inspection" },
+  { key: "cost", label: "Avg Cost Report" },
+  { key: "log", label: "Movement Log" },
+];
+
+const DASHBOARD_LABEL: Record<string, string> = {
+  admin: "Executive Dashboard",
+  accounting: "Accounting Dashboard",
+  sales: "Sales Dashboard",
+  stock: "Stock Dashboard",
+  marketing: "Marketing Dashboard",
+};
+
 const ALL_NAV: { key: string; href: string; icon: React.ElementType; label: string }[] = [
-  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard, label: "Executive Dashboard" },
+  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { key: "stock", href: "/stock", icon: Package, label: "Stock" },
-  { key: "sales", href: "/sales", icon: ShoppingCart, label: "Sales & Marketing" },
+  { key: "sales", href: "/sales", icon: ShoppingCart, label: "Sales" },
+  { key: "marketing", href: "/marketing", icon: Megaphone, label: "Marketing" },
   { key: "approvals", href: "/approvals", icon: CheckSquare, label: "Approval Workflow" },
   { key: "users", href: "/users", icon: Users, label: "Permission & User" },
   { key: "peak", href: "/peak", icon: Zap, label: "Peak Integration" },
@@ -23,7 +47,7 @@ const ALL_NAV: { key: string; href: string; icon: React.ElementType; label: stri
 
 const GROUP_MAP: { label: string; keys: string[] }[] = [
   { label: "ภาพรวม", keys: ["dashboard"] },
-  { label: "โมดูลหลัก", keys: ["stock", "sales", "approvals"] },
+  { label: "โมดูลหลัก", keys: ["stock", "sales", "marketing", "approvals"] },
   { label: "ระบบ", keys: ["users", "peak"] },
 ];
 
@@ -32,13 +56,50 @@ export function Sidebar() {
   const router = useRouter();
   const { mobileOpen, setMobileOpen } = useSidebar();
   const { role, config, setRole } = useRole();
+  const { tab: salesTab, setTab: setSalesTab } = useSalesNav();
+  const { tab: stockTab, setTab: setStockTab } = useStockNav();
+  const { returns, purchaseOrders, goodsReceipts, stockAdjustments, salesOrders, customers, promotions } = useErpStore();
   const [switcherOpen, setSwitcherOpen] = useState(false);
+
+  // ── ตัวเลขแจ้งเตือน (งานค้าง) ต่อเมนูย่อย — ลดลงจริงเมื่อเคลียร์งาน ──
+  const stockCounts: Record<StockTab, number> = {
+    products: 0,
+    suppliers: 0,
+    po: purchaseOrders.filter(p => ["pending", "approved", "partial"].includes(p.status)).length,
+    gr: goodsReceipts.filter(g => !g.approved).length,
+    adjust: stockAdjustments.filter(a => a.status === "pending").length,
+    return: returns.filter(r => r.status === "awaiting-pickup" || r.status === "awaiting-admin-adjust").length,
+    cost: 0,
+    log: 0,
+  };
+  const salesCounts: Record<SalesTab, number> = {
+    orders: salesOrders.filter(o => o.status === "pending-approval").length,
+    customers: customers.filter(c => c.pendingAction).length,
+    pricing: 0,
+    commission: 0,
+    promotions: promotions.filter(p => p.status === "pending-approval").length,
+    creditnote: returns.filter(r => r.status === "awaiting-cn").length,
+    performance: 0,
+  };
+  const stockTotal = Object.values(stockCounts).reduce((a, b) => a + b, 0);
+  // รวมงานค้างแยกตามโมดูล (การขาย / การตลาด) ตามแท็บที่สิทธิ์นี้เห็น
+  const moduleTotal = (m: SalesModule) =>
+    tabsFor(m, role).reduce((sum, t) => sum + (salesCounts[t.key] ?? 0), 0);
+  const salesTotal = moduleTotal("sales");
+  const marketingTotal = moduleTotal("marketing");
 
   function switchRole(r: Role) {
     setRole(r);
     setSwitcherOpen(false);
     setMobileOpen(false);
     router.push(ROLE_CONFIG[r].landing);
+  }
+
+  // ออกจากระบบ → กลับไปหน้ารวมสิทธิ์ (/r) + ล้างสิทธิ์ที่จำไว้
+  function logout() {
+    setMobileOpen(false);
+    try { localStorage.removeItem("demo-role"); } catch {}
+    router.push("/r");
   }
 
   // approval badge: approver เห็น pending ทั้งหมด, คนอื่นเห็น pending ของตัวเอง
@@ -96,34 +157,128 @@ export function Sidebar() {
             </div>
             {group.items.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              // ทุกสิทธิ์: เมนู Sales/Marketing/Stock แตกเป็นเมนูย่อยในแถบซ้าย (ตามแท็บที่สิทธิ์เห็น)
+              const showSalesSub = item.key === "sales";
+              const showMarketingSub = item.key === "marketing";
+              const showStockSub = item.key === "stock";
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[0.82rem] transition-all mb-0.5 group",
-                    isActive
-                      ? "bg-[var(--accent)] text-[var(--primary)] font-600"
-                      : "text-[var(--foreground)] hover:bg-[var(--muted)]"
+                <div key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[0.82rem] transition-all mb-0.5 group",
+                      isActive
+                        ? "bg-[var(--accent)] text-[var(--primary)] font-600"
+                        : "text-[var(--foreground)] hover:bg-[var(--muted)]"
+                    )}
+                  >
+                    <item.icon
+                      size={15}
+                      className={isActive ? "text-[var(--primary)]" : "text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors"}
+                    />
+                    <span className="flex-1">{item.key === "dashboard" ? (DASHBOARD_LABEL[role] ?? item.label) : item.label}</span>
+                    {(() => {
+                      const parentBadge =
+                        item.key === "approvals" ? approvalBadge :
+                        item.key === "stock" ? stockTotal :
+                        item.key === "sales" ? salesTotal :
+                        item.key === "marketing" ? marketingTotal : 0;
+                      if (parentBadge > 0) {
+                        return (
+                          <span
+                            className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[0.6rem] font-700 text-white px-1"
+                            style={{ background: "var(--primary)" }}
+                          >
+                            {parentBadge}
+                          </span>
+                        );
+                      }
+                      if (isActive && !showSalesSub && !showMarketingSub && !showStockSub) {
+                        return <ChevronRight size={11} className="text-[var(--primary)]" />;
+                      }
+                      return null;
+                    })()}
+                  </Link>
+
+                  {/* เมนูย่อยของ Sales / Marketing (ตามแท็บที่สิทธิ์เห็น) */}
+                  {(showSalesSub || showMarketingSub) && (
+                    <div className="ml-[1.1rem] mb-1.5 pl-3 border-l border-[var(--border)] space-y-0.5">
+                      {tabsFor(showMarketingSub ? "marketing" : "sales", role).map((st) => {
+                        const subActive = pathname === item.href && salesTab === st.key;
+                        return (
+                          <button
+                            key={st.key}
+                            onClick={() => {
+                              setSalesTab(st.key);
+                              if (pathname !== item.href) router.push(item.href);
+                              setMobileOpen(false);
+                            }}
+                            className={cn(
+                              "w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[0.78rem] transition-all",
+                              subActive
+                                ? "bg-[var(--accent)] text-[var(--primary)] font-600"
+                                : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+                            )}
+                          >
+                            <span
+                              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                              style={{ background: subActive ? "var(--primary)" : "var(--border)" }}
+                            />
+                            <span className="flex-1 text-left">{st.label}</span>
+                            {salesCounts[st.key] > 0 && (
+                              <span
+                                className="min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-[0.58rem] font-700 text-white px-1"
+                                style={{ background: "var(--primary)" }}
+                              >
+                                {salesCounts[st.key]}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   )}
-                >
-                  <item.icon
-                    size={15}
-                    className={isActive ? "text-[var(--primary)]" : "text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors"}
-                  />
-                  <span className="flex-1">{item.label}</span>
-                  {item.key === "approvals" && approvalBadge > 0 ? (
-                    <span
-                      className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[0.6rem] font-700 text-white px-1"
-                      style={{ background: "var(--primary)" }}
-                    >
-                      {approvalBadge}
-                    </span>
-                  ) : isActive ? (
-                    <ChevronRight size={11} className="text-[var(--primary)]" />
-                  ) : null}
-                </Link>
+
+                  {/* เมนูย่อยของสต๊อก / บัญชี */}
+                  {showStockSub && (
+                    <div className="ml-[1.1rem] mb-1.5 pl-3 border-l border-[var(--border)] space-y-0.5">
+                      {STOCK_SUBTABS.map((st) => {
+                        const subActive = pathname === "/stock" && stockTab === st.key;
+                        return (
+                          <button
+                            key={st.key}
+                            onClick={() => {
+                              setStockTab(st.key);
+                              if (pathname !== "/stock") router.push("/stock");
+                              setMobileOpen(false);
+                            }}
+                            className={cn(
+                              "w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[0.78rem] transition-all",
+                              subActive
+                                ? "bg-[var(--accent)] text-[var(--primary)] font-600"
+                                : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+                            )}
+                          >
+                            <span
+                              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                              style={{ background: subActive ? "var(--primary)" : "var(--border)" }}
+                            />
+                            <span className="flex-1 text-left">{st.label}</span>
+                            {stockCounts[st.key] > 0 && (
+                              <span
+                                className="min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-[0.58rem] font-700 text-white px-1"
+                                style={{ background: "var(--primary)" }}
+                              >
+                                {stockCounts[st.key]}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -195,7 +350,7 @@ export function Sidebar() {
         </div>
 
         {/* User info */}
-        <div className="flex items-center gap-2.5 px-3 py-3">
+        <div className="flex items-center gap-2.5 px-3 pt-3 pb-1.5">
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-700 flex-shrink-0 shadow-sm"
             style={{ background: `linear-gradient(135deg, ${config.color}, ${config.color}cc)` }}
@@ -206,8 +361,17 @@ export function Sidebar() {
             <div className="text-[0.8rem] font-600 truncate">{config.user.name}</div>
             <div className="text-[0.67rem] text-[var(--muted-foreground)] truncate">{config.user.email}</div>
           </div>
-          <button className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-[var(--muted)] transition-colors" title="ออกจากระบบ">
-            <LogOut size={13} className="text-[var(--muted-foreground)]" />
+        </div>
+
+        {/* ออกจากระบบ → หน้ารวมสิทธิ์ (มีทุกสิทธิ์) */}
+        <div className="px-3 pb-3">
+          <button
+            onClick={logout}
+            className="w-full flex items-center justify-center gap-2 h-9 rounded-lg text-[0.78rem] font-600 border border-[var(--border)] text-[var(--muted-foreground)] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+            title="ออกจากระบบ — กลับหน้ารวมสิทธิ์"
+          >
+            <LogOut size={14} />
+            ออกจากระบบ
           </button>
         </div>
       </div>

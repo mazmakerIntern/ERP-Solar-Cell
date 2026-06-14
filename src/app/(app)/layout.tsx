@@ -4,6 +4,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { SidebarProvider, useSidebar } from "@/components/layout/sidebar-context";
 import { RoleProvider, useRole } from "@/components/layout/role-context";
+import { SalesNavProvider } from "@/components/layout/sales-nav-context";
+import { StockNavProvider } from "@/components/layout/stock-nav-context";
+import { ErpStoreProvider } from "@/components/layout/erp-store-context";
 import { Lock } from "lucide-react";
 
 function NoAccess() {
@@ -61,9 +64,15 @@ function Shell({ children }: { children: React.ReactNode }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <RoleProvider>
-      <SidebarProvider>
-        <Shell>{children}</Shell>
-      </SidebarProvider>
+      <SalesNavProvider>
+        <StockNavProvider>
+          <ErpStoreProvider>
+            <SidebarProvider>
+              <Shell>{children}</Shell>
+            </SidebarProvider>
+          </ErpStoreProvider>
+        </StockNavProvider>
+      </SalesNavProvider>
     </RoleProvider>
   );
 }

@@ -57,6 +57,11 @@ export function statusBadge(status: string) {
     inspecting: { label: "กำลังตรวจ", variant: "info" },
     pass: { label: "ผ่าน", variant: "success" },
     fail: { label: "ไม่ผ่าน", variant: "error" },
+    "awaiting-pickup": { label: "รอสต๊อกรับสินค้า", variant: "warning" },
+    "awaiting-admin-adjust": { label: "รอผู้บริหารอนุมัติปรับสต๊อก", variant: "warning" },
+    "awaiting-cn": { label: "รอเซลล์ออก Credit Note", variant: "info" },
+    "stock-rejected": { label: "สต๊อกปฏิเสธรับคืน", variant: "error" },
+    pushing: { label: "กำลัง Push เข้า Peak", variant: "warning" },
   };
   const config = map[status] ?? { label: status, variant: "secondary" as BadgeVariant };
   return <Badge variant={config.variant}>{config.label}</Badge>;

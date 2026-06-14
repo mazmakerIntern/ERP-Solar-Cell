@@ -2,6 +2,6 @@
 
 import { SalesMarketingPage } from "@/components/sales/sales-marketing-page";
 
-export default function SalesPage() {
-  return <SalesMarketingPage module="sales" />;
+export default function MarketingPage() {
+  return <SalesMarketingPage module="marketing" />;
 }

@@ -3,11 +3,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import {
   Crown, Briefcase, Package, Calculator,
-  TrendingUp, Clock, AlertTriangle, DollarSign, Users as UsersIcon,
-  PackageCheck, Undo2, Zap, FileWarning,
+  TrendingUp, Clock, AlertTriangle, Users as UsersIcon,
+  PackageCheck, Undo2, Zap, FileWarning, Megaphone, Target, BarChart2,
 } from "lucide-react";
+import { BahtSign } from "@/components/ui/baht-sign";
 
-export type Role = "admin" | "sales" | "stock" | "accounting";
+export type Role = "admin" | "sales" | "stock" | "accounting" | "marketing";
 
 export interface RolePerms {
   canSeeCost: boolean;          // เห็นต้นทุน Avg Cost
@@ -50,7 +51,7 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
     color: "#e60023",
     user: { name: "ผู้บริหาร ระบบ", email: "admin@solarsell.co.th", initial: "ผ" },
     landing: "/dashboard",
-    nav: ["dashboard", "stock", "sales", "approvals", "users", "peak"],
+    nav: ["dashboard", "stock", "sales", "marketing", "approvals", "users", "peak"],
     perms: { canSeeCost: true, commissionScope: "all", stockReadOnly: false, canApprove: true, canSell: true },
     capabilities: [
       "ดูภาพรวมธุรกิจทั้งบริษัท (Executive Dashboard)",
@@ -76,8 +77,8 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
     icon: Briefcase,
     color: "#2563eb",
     user: { name: "วิภา สุขใจ", email: "wipa@solarsell.co.th", initial: "ว" },
-    landing: "/sales",
-    nav: ["sales", "stock", "approvals"],
+    landing: "/dashboard",
+    nav: ["dashboard", "sales", "marketing", "approvals"],
     perms: { canSeeCost: false, commissionScope: "own", stockReadOnly: true, canApprove: false, canSell: true },
     capabilities: [
       "สร้างใบสั่งขาย (ดึงราคา Tier + โปรโมชั่นอัตโนมัติ)",
@@ -87,7 +88,7 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
     ],
     quickStats: [
       { label: "ยอดขายฉัน (เดือน)", value: "289,970 ฿", icon: TrendingUp, color: "#2563eb" },
-      { label: "คอมมิชชั่นฉัน", value: "13,675 ฿", icon: DollarSign, color: "#059669" },
+      { label: "คอมมิชชั่นฉัน", value: "13,675 ฿", icon: BahtSign, color: "#059669" },
       { label: "ลูกค้าของฉัน", value: "3 ราย", icon: UsersIcon, color: "#6b7280" },
     ],
     todos: [
@@ -103,8 +104,8 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
     icon: Package,
     color: "#0d9488",
     user: { name: "สมหญิง วงศ์ดี", email: "somying@solarsell.co.th", initial: "ส" },
-    landing: "/stock",
-    nav: ["stock", "approvals"],
+    landing: "/dashboard",
+    nav: ["dashboard", "stock", "approvals"],
     perms: { canSeeCost: true, commissionScope: "none", stockReadOnly: false, canApprove: false, canSell: false },
     capabilities: [
       "จัดการคลัง: รับเข้า / ตัดออก / ปรับยอด",
@@ -131,8 +132,8 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
     icon: Calculator,
     color: "#7c3aed",
     user: { name: "บัญชี หมื่นดี", email: "accounting@solarsell.co.th", initial: "บ" },
-    landing: "/peak",
-    nav: ["peak", "sales", "stock", "approvals"],
+    landing: "/dashboard",
+    nav: ["dashboard", "peak", "sales", "stock", "approvals"],
     perms: { canSeeCost: true, commissionScope: "all", stockReadOnly: true, canApprove: true, canSell: false },
     capabilities: [
       "จัดการการเชื่อมต่อ Peak + ตรวจสอบ Sync",
@@ -141,13 +142,40 @@ export const ROLE_CONFIG: Record<Role, RoleConfig> = {
       "อนุมัติเอกสารบางกรณี (เช่น คืนเกิน Period)",
     ],
     quickStats: [
-      { label: "ค้างชำระ (AR)", value: "280,000 ฿", icon: DollarSign, color: "#d97706" },
+      { label: "ค้างชำระ (AR)", value: "280,000 ฿", icon: BahtSign, color: "#d97706" },
       { label: "รอ Sync Peak", value: "1 รายการ", icon: Zap, color: "#7c3aed" },
       { label: "Sync Error", value: "1 รายการ", icon: FileWarning, color: "#dc2626" },
     ],
     todos: [
       { label: "เอกสาร Sync ล้มเหลว (ต้อง Retry)", count: "1", href: "/peak", color: "#dc2626" },
       { label: "เอกสารรอ Push เข้า Peak", count: "1", href: "/peak", color: "#7c3aed" },
+    ],
+  },
+  marketing: {
+    role: "marketing",
+    label: "การตลาด",
+    shortDesc: "Marketing",
+    fullTitle: "พนักงานการตลาด (Marketing)",
+    icon: Megaphone,
+    color: "#ea580c",
+    user: { name: "นิดา มาร์เก็ตติ้ง", email: "nida@solarsell.co.th", initial: "น" },
+    landing: "/dashboard",
+    nav: ["dashboard", "sales", "marketing", "approvals"],
+    perms: { canSeeCost: false, commissionScope: "none", stockReadOnly: true, canApprove: false, canSell: false },
+    capabilities: [
+      "สร้าง/แก้ไข Promotion & Discount Rule (ต้องขออนุมัติก่อนมีผล)",
+      "สร้าง/แก้ไข Customer Tier (ต้องขออนุมัติก่อนมีผล)",
+      "ดู Promotion Performance ทุกแคมเปญ",
+      "ดูยอดขายภาพรวม (ไม่เห็นต้นทุน / คอมมิชชั่น)",
+    ],
+    quickStats: [
+      { label: "โปรโมชั่น Active", value: "2 แคมเปญ", icon: Target, color: "#ea580c" },
+      { label: "รออนุมัติ Promo", value: "1 รายการ", icon: Clock, color: "#d97706" },
+      { label: "Conversion Rate", value: "18.4%", icon: BarChart2, color: "#059669" },
+    ],
+    todos: [
+      { label: "โปรโมชั่นรออนุมัติจากผู้บริหาร", count: "1", href: "/sales", color: "#d97706" },
+      { label: "โปรโมชั่นใกล้หมดอายุ (7 วัน)", count: "1", href: "/sales", color: "#ea580c" },
     ],
   },
 };
@@ -164,6 +192,13 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   const [role, setRoleState] = useState<Role>("admin");
 
   useEffect(() => {
+    // 1 ลิงก์ / 1 สิทธิ์ — รองรับ ?role=... บน URL ใด ๆ (เช่น /sales?role=stock)
+    const fromUrl = new URLSearchParams(window.location.search).get("role") as Role | null;
+    if (fromUrl && ROLE_CONFIG[fromUrl]) {
+      setRoleState(fromUrl);
+      localStorage.setItem("demo-role", fromUrl);
+      return;
+    }
     const saved = localStorage.getItem("demo-role") as Role | null;
     if (saved && ROLE_CONFIG[saved]) setRoleState(saved);
   }, []);

@@ -13,8 +13,8 @@ export const mockUser = {
 // ---------- STOCK ----------
 
 export const mockProducts = [
-  { id: "P001", sku: "SC-MON-400W", name: "แผงโซลาร์ Mono 400W", category: "แผง", avgCost: 4200, price1: 5500, price2: 5200, price3: 4800, price4: 4500, stock: 142, reorderPoint: 50, reorderQty: 100, supplier: "S001", status: "active" },
-  { id: "P002", sku: "SC-MON-550W", name: "แผงโซลาร์ Mono 550W", category: "แผง", avgCost: 5800, price1: 7500, price2: 7100, price3: 6600, price4: 6200, stock: 28, reorderPoint: 40, reorderQty: 80, supplier: "S001", status: "active" },
+  { id: "P001", sku: "SC-MON-400W", name: "แผงโซลาร์ Mono 400W", category: "แผงโซลล่าเซลล์", avgCost: 4200, price1: 5500, price2: 5200, price3: 4800, price4: 4500, stock: 142, reorderPoint: 50, reorderQty: 100, supplier: "S001", status: "active" },
+  { id: "P002", sku: "SC-MON-550W", name: "แผงโซลาร์ Mono 550W", category: "แผงโซลล่าเซลล์", avgCost: 5800, price1: 7500, price2: 7100, price3: 6600, price4: 6200, stock: 28, reorderPoint: 40, reorderQty: 80, supplier: "S001", status: "active" },
   { id: "P003", sku: "INV-5KW-HYB", name: "อินเวอร์เตอร์ Hybrid 5kW", category: "อินเวอร์เตอร์", avgCost: 28000, price1: 36000, price2: 34000, price3: 31500, price4: 30000, stock: 15, reorderPoint: 10, reorderQty: 20, supplier: "S002", status: "active" },
   { id: "P004", sku: "INV-10KW-HYB", name: "อินเวอร์เตอร์ Hybrid 10kW", category: "อินเวอร์เตอร์", avgCost: 52000, price1: 68000, price2: 64000, price3: 60000, price4: 57000, stock: 8, reorderPoint: 5, reorderQty: 10, supplier: "S002", status: "active" },
   { id: "P005", sku: "BAT-LI-100AH", name: "แบตเตอรี่ Lithium 100Ah", category: "แบตเตอรี่", avgCost: 18000, price1: 23000, price2: 21500, price3: 20000, price4: 19000, stock: 35, reorderPoint: 20, reorderQty: 40, supplier: "S003", status: "active" },
@@ -62,11 +62,14 @@ export const mockStockAdjustments = [
   { id: "ADJ2406004", product: "แบตเตอรี่ Lithium 100Ah", sku: "BAT-LI-100AH", systemQty: 36, actualQty: 35, diff: -1, reason: "พบสินค้าชำรุดจากการจัดเก็บ", trigger: "manual", status: "pending", by: "สมหญิง วงศ์ดี", date: "2024-06-14", approveDate: null },
 ];
 
+// receivedQty = จำนวนที่สต๊อกรับเข้าจริง (null = ยังไม่รับ) · ใช้คำนวณยอด Credit Note
 export const mockReturns = [
-  { id: "RET2406001", soId: "SO2406010", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", product: "แผงโซลาร์ Mono 400W", qty: 2, value: 11000, returnDays: 12, withinPeriod: true, inspectionResult: "pass", status: "completed", creditNote: "CN-2024-0101", by: "วิภา สุขใจ", date: "2024-06-12", reason: "ลูกค้าสั่งเกิน" },
-  { id: "RET2406002", soId: "SO2405088", customer: "ห้างหุ้นส่วน สยามกรีน", product: "แผงโซลาร์ Mono 550W", qty: 3, value: 16500, returnDays: 35, withinPeriod: false, inspectionResult: "pending", status: "rejected", creditNote: null, by: "วิภา สุขใจ", date: "2024-06-12", reason: "เกิน Return Period (35 วัน) — Exception ถูกปฏิเสธ" },
-  { id: "RET2406003", soId: "SO2406008", customer: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", product: "อินเวอร์เตอร์ Hybrid 5kW", qty: 1, value: 31500, returnDays: 8, withinPeriod: true, inspectionResult: "fail", status: "partial-credit", creditNote: "CN-2024-0102", by: "วิภา สุขใจ", date: "2024-06-13", reason: "สินค้าชำรุด — ออก Partial Credit Note" },
-  { id: "RET2406004", soId: "SO2406015", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", product: "แผงโซลาร์ Mono 400W", qty: 1, value: 4800, returnDays: 2, withinPeriod: true, inspectionResult: "inspecting", status: "inspecting", creditNote: null, by: "สมหญิง วงศ์ดี", date: "2024-06-14", reason: "อยู่ระหว่างตรวจสภาพสินค้า" },
+  { id: "RET2406001", soId: "SO2406010", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", product: "แผงโซลาร์ Mono 400W", qty: 2, value: 11000, receivedQty: 2, returnDays: 12, withinPeriod: true, inspectionResult: "received", status: "completed", creditNote: "CN-2024-0101", by: "วิภา สุขใจ", date: "2024-06-12", reason: "ลูกค้าสั่งเกิน" },
+  { id: "RET2406002", soId: "SO2405088", customer: "ห้างหุ้นส่วน สยามกรีน", product: "แผงโซลาร์ Mono 550W", qty: 3, value: 16500, receivedQty: 0, returnDays: 35, withinPeriod: false, inspectionResult: "pending", status: "rejected", creditNote: null, by: "วิภา สุขใจ", date: "2024-06-12", reason: "เกิน Return Period (35 วัน) — Exception ถูกปฏิเสธ" },
+  { id: "RET2406003", soId: "SO2406008", customer: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", product: "อินเวอร์เตอร์ Hybrid 5kW", qty: 1, value: 31500, receivedQty: 1, returnDays: 8, withinPeriod: true, inspectionResult: "received", status: "completed", creditNote: "CN-2024-0102", by: "วิภา สุขใจ", date: "2024-06-13", reason: "สินค้าชำรุด — รับคืนบางส่วน" },
+  { id: "RET2406004", soId: "SO2406015", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", product: "แผงโซลาร์ Mono 400W", qty: 1, value: 4800, receivedQty: 1, returnDays: 2, withinPeriod: true, inspectionResult: "received", status: "awaiting-cn", creditNote: null, by: "สมหญิง วงศ์ดี", date: "2024-06-14", reason: "ลูกค้าสั่งเกิน 1 แผง" },
+  { id: "RET2406005", soId: "SO2406012", customer: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", product: "แบตเตอรี่ Lithium 200Ah", qty: 2, value: 74000, receivedQty: null, returnDays: 2, withinPeriod: true, inspectionResult: "pending", status: "awaiting-pickup", creditNote: null, by: "วิภา สุขใจ", date: "2024-06-14", reason: "ลูกค้าแจ้งสินค้าไม่ตรงสเปค — รอสต๊อกเข้ารับ" },
+  { id: "RET2406006", soId: "SO2406014", customer: "ห้างหุ้นส่วน สยามกรีน", product: "อินเวอร์เตอร์ Hybrid 5kW", qty: 1, value: 31500, receivedQty: 1, returnDays: 4, withinPeriod: true, inspectionResult: "received", status: "awaiting-admin-adjust", creditNote: null, by: "สมหญิง วงศ์ดี", date: "2024-06-14", reason: "ลูกค้าสั่งผิดรุ่น — สต๊อกรับของแล้ว รอผู้บริหารอนุมัติปรับสต๊อก" },
 ];
 
 export const mockCreditNotes = [
@@ -94,35 +97,45 @@ export const tierMeta = [
 
 
 export const mockCustomers = [
-  { id: "C001", name: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", contact: "คุณอรุณ", phone: "081-234-5678", dept: "แผง", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 28, totalValue: 4850000 },
-  { id: "C002", name: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", contact: "คุณประเสริฐ", phone: "089-345-6789", dept: "แผง+อินเวอร์เตอร์", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 5, totalValue: 285000 },
+  { id: "C001", name: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", contact: "คุณอรุณ", phone: "081-234-5678", dept: "แผงโซลล่าเซลล์", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 28, totalValue: 4850000 },
+  { id: "C002", name: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", contact: "คุณประเสริฐ", phone: "089-345-6789", dept: "แผงโซลล่าเซลล์+อินเวอร์เตอร์", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 5, totalValue: 285000 },
   { id: "C003", name: "ห้างหุ้นส่วน สยามกรีน", tier: "ผู้รับเหมา", contact: "คุณสุรพล", phone: "062-456-7890", dept: "ทุกแผนก", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 15, totalValue: 2100000 },
-  { id: "C004", name: "นาย สมบัติ โชคดี (Founder)", tier: "Founder", contact: "คุณสมบัติ", phone: "090-567-8901", dept: "แผง", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 42, totalValue: 8200000 },
+  { id: "C004", name: "นาย สมบัติ โชคดี (Founder)", tier: "Founder", contact: "คุณสมบัติ", phone: "090-567-8901", dept: "แผงโซลล่าเซลล์", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 42, totalValue: 8200000 },
   { id: "C005", name: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", tier: "Dealer", contact: "คุณมณีรัตน์", phone: "083-678-9012", dept: "ครบชุด", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 19, totalValue: 3600000 },
 ];
 
 export const mockSalesOrders = [
-  { id: "SO2406015", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", items: [{ name: "แผงโซลาร์ Mono 400W", qty: 5, unitPrice: 4800, dept: "แผง" }], subtotal: 24000, discount: 0, vat: 1680, total: 25680, commission: 1200, status: "closed", salesBy: "วิภา สุขใจ", date: "2024-06-14", invoicePushed: true },
+  { id: "SO2406015", customer: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", items: [{ name: "แผงโซลาร์ Mono 400W", qty: 5, unitPrice: 4800, dept: "แผงโซลล่าเซลล์" }], subtotal: 24000, discount: 0, vat: 1680, total: 25680, commission: 1200, status: "closed", salesBy: "วิภา สุขใจ", date: "2024-06-14", invoicePushed: true },
   { id: "SO2406014", customer: "ห้างหุ้นส่วน สยามกรีน", tier: "ผู้รับเหมา", items: [{ name: "อินเวอร์เตอร์ Hybrid 5kW", qty: 2, unitPrice: 31500, dept: "อินเวอร์เตอร์" }, { name: "แบตเตอรี่ Lithium 100Ah", qty: 4, unitPrice: 20000, dept: "แบตเตอรี่" }], subtotal: 143000, discount: 5000, vat: 9660, total: 147660, commission: 7150, status: "closed", salesBy: "วิภา สุขใจ", date: "2024-06-13", invoicePushed: true },
-  { id: "SO2406013", customer: "นาย สมบัติ โชคดี", tier: "Founder", items: [{ name: "แผงโซลาร์ Mono 550W", qty: 20, unitPrice: 6200, dept: "แผง" }], subtotal: 124000, discount: 0, vat: 8680, total: 132680, commission: 6200, status: "pending-approval", salesBy: "สมศักดิ์ รักดี", date: "2024-06-13", invoicePushed: false },
+  { id: "SO2406013", customer: "นาย สมบัติ โชคดี", tier: "Founder", items: [{ name: "แผงโซลาร์ Mono 550W", qty: 20, unitPrice: 6200, dept: "แผงโซลล่าเซลล์" }], subtotal: 124000, discount: 0, vat: 8680, total: 132680, commission: 6200, status: "pending-approval", salesBy: "สมศักดิ์ รักดี", date: "2024-06-13", invoicePushed: false },
   { id: "SO2406012", customer: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", tier: "Dealer", items: [{ name: "แบตเตอรี่ Lithium 200Ah", qty: 3, unitPrice: 37000, dept: "แบตเตอรี่" }], subtotal: 111000, discount: 2000, vat: 7630, total: 116630, commission: 5550, status: "closed", salesBy: "วิภา สุขใจ", date: "2024-06-12", invoicePushed: true },
-  { id: "SO2406011", customer: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", items: [{ name: "แผงโซลาร์ Mono 400W", qty: 10, unitPrice: 5500, dept: "แผง" }], subtotal: 55000, discount: 0, vat: 3850, total: 58850, commission: 2750, status: "cancelled", salesBy: "สมศักดิ์ รักดี", date: "2024-06-11", invoicePushed: false },
+  { id: "SO2406011", customer: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", items: [{ name: "แผงโซลาร์ Mono 400W", qty: 10, unitPrice: 5500, dept: "แผงโซลล่าเซลล์" }], subtotal: 55000, discount: 0, vat: 3850, total: 58850, commission: 2750, status: "cancelled", salesBy: "สมศักดิ์ รักดี", date: "2024-06-11", invoicePushed: false },
 ];
 
 export const mockCommissions = [
-  { id: "COM001", soId: "SO2406015", sales: "วิภา สุขใจ", dept: "แผง", amount: 1200, rate: 5, status: "confirmed", date: "2024-06-14" },
+  { id: "COM001", soId: "SO2406015", sales: "วิภา สุขใจ", dept: "แผงโซลล่าเซลล์", amount: 1200, rate: 5, status: "confirmed", date: "2024-06-14" },
   { id: "COM002", soId: "SO2406014", sales: "วิภา สุขใจ", dept: "อินเวอร์เตอร์", amount: 4725, rate: 4.5, status: "confirmed", date: "2024-06-13" },
   { id: "COM003", soId: "SO2406014", sales: "วิภา สุขใจ", dept: "แบตเตอรี่", amount: 2400, rate: 3, status: "confirmed", date: "2024-06-13" },
-  { id: "COM004", soId: "SO2406013", sales: "สมศักดิ์ รักดี", dept: "แผง", amount: 6200, rate: 5, status: "pending", date: "2024-06-13" },
+  { id: "COM004", soId: "SO2406013", sales: "สมศักดิ์ รักดี", dept: "แผงโซลล่าเซลล์", amount: 6200, rate: 5, status: "pending", date: "2024-06-13" },
   { id: "COM005", soId: "SO2406012", sales: "วิภา สุขใจ", dept: "แบตเตอรี่", amount: 5550, rate: 5, status: "confirmed", date: "2024-06-12" },
-  { id: "COM006", soId: "SO2406011", sales: "สมศักดิ์ รักดี", dept: "แผง", amount: 2750, rate: 5, status: "cancelled", date: "2024-06-11" },
+  { id: "COM006", soId: "SO2406011", sales: "สมศักดิ์ รักดี", dept: "แผงโซลล่าเซลล์", amount: 2750, rate: 5, status: "cancelled", date: "2024-06-11" },
 ];
 
 export const mockPromotions = [
-  { id: "PR001", name: "โปร Mid-Year Sale", type: "percent", value: 5, tier: ["Dealer", "Founder"], startDate: "2024-06-01", endDate: "2024-06-30", status: "active", priority: 1 },
-  { id: "PR002", name: "โปรพิเศษ Founder Q2", type: "fixed", value: 5000, tier: ["Founder"], startDate: "2024-04-01", endDate: "2024-06-30", status: "active", priority: 2 },
-  { id: "PR003", name: "โปรลูกค้าใหม่", type: "percent", value: 3, tier: ["ทั่วไป"], startDate: "2024-01-01", endDate: "2024-12-31", status: "active", priority: 3 },
-  { id: "PR004", name: "Flash Sale โครงสร้าง", type: "percent", value: 8, tier: ["ทั่วไป", "ผู้รับเหมา", "Dealer", "Founder"], startDate: "2024-06-15", endDate: "2024-06-16", status: "scheduled", priority: 1 },
+  { id: "PR001", name: "โปร Mid-Year Sale", type: "percent", value: 5, tier: ["Dealer", "Founder"], startDate: "2024-06-01", endDate: "2024-06-30", status: "active", priority: 1, usedCount: 8, revenue: 289970, createdBy: "นิดา มาร์เก็ตติ้ง" },
+  { id: "PR002", name: "โปรพิเศษ Founder Q2", type: "fixed", value: 5000, tier: ["Founder"], startDate: "2024-04-01", endDate: "2024-06-30", status: "active", priority: 2, usedCount: 12, revenue: 1240000, createdBy: "นิดา มาร์เก็ตติ้ง" },
+  { id: "PR003", name: "โปรลูกค้าใหม่", type: "percent", value: 3, tier: ["ทั่วไป"], startDate: "2024-01-01", endDate: "2024-12-31", status: "active", priority: 3, usedCount: 4, revenue: 95000, createdBy: "นิดา มาร์เก็ตติ้ง" },
+  { id: "PR004", name: "Flash Sale โครงสร้าง", type: "percent", value: 8, tier: ["ทั่วไป", "ผู้รับเหมา", "Dealer", "Founder"], startDate: "2024-06-15", endDate: "2024-06-16", status: "scheduled", priority: 1, usedCount: 0, revenue: 0, createdBy: "นิดา มาร์เก็ตติ้ง" },
+  { id: "PR005", name: "โปรผู้รับเหมา Q3", type: "percent", value: 4, tier: ["ผู้รับเหมา"], startDate: "2024-07-01", endDate: "2024-09-30", status: "pending-approval", priority: 2, usedCount: 0, revenue: 0, createdBy: "นิดา มาร์เก็ตติ้ง" },
+];
+
+export const mockPromoPerformance = [
+  { month: "ม.ค.", promoRevenue: 95000, normalRevenue: 225000 },
+  { month: "ก.พ.", promoRevenue: 140000, normalRevenue: 240000 },
+  { month: "มี.ค.", promoRevenue: 88000, normalRevenue: 202000 },
+  { month: "เม.ย.", promoRevenue: 195000, normalRevenue: 255000 },
+  { month: "พ.ค.", promoRevenue: 210000, normalRevenue: 210000 },
+  { month: "มิ.ย.", promoRevenue: 289970, normalRevenue: 190690 },
 ];
 
 // ---------- APPROVAL WORKFLOW ----------
@@ -133,6 +146,7 @@ export const mockApprovals = [
   { id: "APR003", type: "ปรับยอดสต็อก", ref: "ADJ2406003", detail: "ตรวจนับโครงอะลูมิเนียม พบขาด 10 ชิ้น", requestBy: "สมชาย ใจดี", requestDate: "2024-06-13 14:00", status: "approved", approver: "ผู้บริหาร", approveDate: "2024-06-13 15:30", amount: 1800 },
   { id: "APR004", type: "คืนสินค้าเกิน Return Period", ref: "RET2406002", detail: "ลูกค้าขอคืนแผง 3 แผ่น — เกิน 30 วัน (35 วัน)", requestBy: "วิภา สุขใจ", requestDate: "2024-06-12 09:00", status: "rejected", approver: "ผู้บริหาร", approveDate: "2024-06-12 11:00", rejectReason: "เกินกำหนด Return Period เกินไปมาก", amount: 16500 },
   { id: "APR005", type: "บิลใหญ่เกิน Threshold", ref: "SO2406014", detail: "บิลมูลค่า 147,660 บาท เกิน Threshold 100,000 บาท", requestBy: "วิภา สุขใจ", requestDate: "2024-06-13 16:00", status: "approved", approver: "ผู้บริหาร", approveDate: "2024-06-13 16:30", amount: 147660 },
+  { id: "APR006", type: "สร้างโปรโมชั่นใหม่", ref: "PR005", detail: "โปรผู้รับเหมา Q3 — ส่วนลด 4% ระหว่าง 1 ก.ค. – 30 ก.ย. 2567", requestBy: "นิดา มาร์เก็ตติ้ง", requestDate: "2024-06-14 11:00", status: "pending", approver: "ผู้บริหาร", amount: 0 },
 ];
 
 // ---------- PERMISSION & USER ----------
@@ -144,6 +158,7 @@ export const mockUsers = [
   { id: "U004", name: "สมหญิง วงศ์ดี", email: "somying@solarsell.co.th", role: "stock", dept: "-", lastLogin: "2024-06-14 07:30", status: "active" },
   { id: "U005", name: "บัญชี หมื่นดี", email: "accounting@solarsell.co.th", role: "accounting", dept: "-", lastLogin: "2024-06-13 17:00", status: "active" },
   { id: "U006", name: "นำชัย เจริญ", email: "namchai@solarsell.co.th", role: "sales", dept: "ทุกแผนก", lastLogin: "2024-06-10 16:00", status: "inactive" },
+  { id: "U007", name: "นิดา มาร์เก็ตติ้ง", email: "nida@solarsell.co.th", role: "marketing", dept: "การตลาด", lastLogin: "2024-06-14 10:00", status: "active" },
 ];
 
 export const mockActivityLog = [
@@ -186,7 +201,7 @@ export const mockDashboardKPI = {
 };
 
 export const mockSalesByDept = [
-  { dept: "แผง", actual: 156000, target: 200000 },
+  { dept: "แผงโซลล่าเซลล์", actual: 156000, target: 200000 },
   { dept: "อินเวอร์เตอร์", actual: 143000, target: 180000 },
   { dept: "แบตเตอรี่", actual: 111000, target: 120000 },
   { dept: "โครงสร้าง/สาย", actual: 70660, target: 100000 },
@@ -210,6 +225,7 @@ export const roleLabel: Record<string, string> = {
   sales: "เซลส์",
   stock: "สต็อก",
   accounting: "บัญชี",
+  marketing: "การตลาด",
 };
 
 export const statusColor: Record<string, string> = {
