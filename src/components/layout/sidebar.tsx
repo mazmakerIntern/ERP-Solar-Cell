@@ -16,7 +16,8 @@ import {
 import { mockApprovals } from "@/lib/mock-data";
 
 // เมนูย่อยใต้ Stock (สต๊อก + บัญชี) — Movement Log อยู่ท้ายสุด
-const STOCK_SUBTABS: { key: StockTab; label: string }[] = [
+const STOCK_SUBTABS_BASE: { key: StockTab; label: string; adminOnly?: boolean }[] = [
+  { key: "dashboard", label: "ภาพรวม", adminOnly: true },
   { key: "products", label: "สินค้า" },
   { key: "suppliers", label: "ผู้ขาย" },
   { key: "po", label: "Purchase Order" },
@@ -58,11 +59,12 @@ export function Sidebar() {
   const { role, config, setRole } = useRole();
   const { tab: salesTab, setTab: setSalesTab } = useSalesNav();
   const { tab: stockTab, setTab: setStockTab } = useStockNav();
-  const { returns, purchaseOrders, goodsReceipts, stockAdjustments, salesOrders, customers, promotions } = useErpStore();
+  const { returns, purchaseOrders, goodsReceipts, stockAdjustments, salesOrders, customers, promotions, tiers } = useErpStore();
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
   // ── ตัวเลขแจ้งเตือน (งานค้าง) ต่อเมนูย่อย — ลดลงจริงเมื่อเคลียร์งาน ──
   const stockCounts: Record<StockTab, number> = {
+    dashboard: 0,
     products: 0,
     suppliers: 0,
     po: purchaseOrders.filter(p => ["pending", "approved", "partial"].includes(p.status)).length,
@@ -73,14 +75,17 @@ export function Sidebar() {
     log: 0,
   };
   const salesCounts: Record<SalesTab, number> = {
+    dashboard: 0,
     orders: salesOrders.filter(o => o.status === "pending-approval").length,
     customers: customers.filter(c => c.pendingAction).length,
-    pricing: 0,
     commission: 0,
     promotions: promotions.filter(p => p.status === "pending-approval").length,
     creditnote: returns.filter(r => r.status === "awaiting-cn").length,
     performance: 0,
+    tiers: tiers.filter(t => t.pendingAction).length,
   };
+
+  const stockSubtabs = STOCK_SUBTABS_BASE.filter(st => !st.adminOnly || role === "admin");
   const stockTotal = Object.values(stockCounts).reduce((a, b) => a + b, 0);
   // รวมงานค้างแยกตามโมดูล (การขาย / การตลาด) ตามแท็บที่สิทธิ์นี้เห็น
   const moduleTotal = (m: SalesModule) =>
@@ -243,7 +248,7 @@ export function Sidebar() {
                   {/* เมนูย่อยของสต๊อก / บัญชี */}
                   {showStockSub && (
                     <div className="ml-[1.1rem] mb-1.5 pl-3 border-l border-[var(--border)] space-y-0.5">
-                      {STOCK_SUBTABS.map((st) => {
+                      {stockSubtabs.map((st) => {
                         const subActive = pathname === "/stock" && stockTab === st.key;
                         return (
                           <button

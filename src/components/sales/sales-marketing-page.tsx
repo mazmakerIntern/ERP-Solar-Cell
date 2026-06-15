@@ -6,11 +6,11 @@ import { Badge, statusBadge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import {
   mockCustomers, mockSalesOrders, mockCommissions, mockPromotions, mockProducts,
-  mockTierPricing, tierMeta, mockPromoPerformance,
+  mockPromoPerformance,
 } from "@/lib/mock-data";
 import { useRole } from "@/components/layout/role-context";
 import { useSalesNav, tabsFor, type SalesTab, type SalesModule } from "@/components/layout/sales-nav-context";
-import { useErpStore, type ReturnRec, type Customer, type CustomerPatch } from "@/components/layout/erp-store-context";
+import { useErpStore, type ReturnRec, type Customer, type CustomerPatch, type Tier, type TierPatch } from "@/components/layout/erp-store-context";
 import {
   Users, ShoppingCart, Tag, Plus, Search, X, ChevronDown, Check,
   Trash2, Layers, FileMinus, Info, BarChart2, RotateCcw, FileEdit, Clock,
@@ -20,6 +20,7 @@ import { BahtSign } from "@/components/ui/baht-sign";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
+import { SalesDashboard, MarketingDashboard } from "@/components/dashboards/dept-dashboards";
 
 type Tab = SalesTab;
 
@@ -59,15 +60,18 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
   const [search, setSearch] = useState("");
   const [showCreateSO, setShowCreateSO] = useState(false);
   const [showCreateReturn, setShowCreateReturn] = useState(false);
-  const [marketingModal, setMarketingModal] = useState<null | "customers" | "promotions" | "pricing">(null);
+  const [marketingModal, setMarketingModal] = useState<null | "customers" | "promotions" | "tiers">(null);
   const [editCustomer, setEditCustomer] = useState<Customer | null>(null);
-  const { salesOrders, createSalesOrder, createReturnRequest, addCustomer, updateCustomer, addPromotion, addTierPricing } = useErpStore();
+  const { salesOrders, createSalesOrder, createReturnRequest, addCustomer, updateCustomer, addPromotion, addTier } = useErpStore();
   const orders = salesOrders;
 
   // ── จัดการลูกค้า: ผู้บริหาร/เซลล์ ทำได้ทันที · การตลาด ต้องรออนุมัติ · บัญชี ดูอย่างเดียว ──
   const customerManageMode: "direct" | "approval" | undefined =
     role === "admin" || role === "sales" ? "direct" : isMarketing ? "approval" : undefined;
   const canApproveCustomers = role === "admin";
+  // จัดการนิยาม Tier: ผู้บริหารทำได้ทันที · การตลาดเสนอ (รออนุมัติ)
+  const tierManageMode: "direct" | "approval" | undefined =
+    role === "admin" ? "direct" : isMarketing ? "approval" : undefined;
 
   const ownScope = config.perms.commissionScope === "own";
   const ownName = config.user.name;
@@ -80,17 +84,16 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
   const marketingCreateTabs: Partial<Record<Tab, string>> = {
     customers: "เพิ่มลูกค้า",
     promotions: "เพิ่มโปรโมชั่น (ต้องอนุมัติ)",
-    pricing: "เพิ่ม Segment Pricing",
   };
 
   const allTabs: { key: Tab; label: string; icon: React.ElementType; desc: string; module: SalesModule; roles?: string[] }[] = [
     { key: "orders", label: "ใบสั่งขาย", icon: ShoppingCart, desc: "สร้างและติดตามใบสั่งขาย ดึงราคา Tier + โปรอัตโนมัติ", module: "sales", roles: ["admin", "sales", "accounting"] },
     { key: "customers", label: "ลูกค้า", icon: Users, desc: "ข้อมูลลูกค้าและ Tier ที่รับผิดชอบ", module: "sales" },
-    { key: "pricing", label: "Tier Pricing", icon: Layers, desc: "ราคาตาม Tier และ Floor Price ต่อสินค้า", module: "sales" },
     { key: "commission", label: "Commission & KPI", icon: BahtSign, desc: "คอมมิชชั่นและเป้า KPI", module: "sales", roles: ["admin", "sales", "accounting"] },
     { key: "creditnote", label: "Credit Note", icon: FileMinus, desc: "ใบลดหนี้ที่เกิดจากการคืนสินค้า", module: "sales", roles: ["admin", "sales", "accounting"] },
     { key: "promotions", label: "โปรโมชั่น", icon: Tag, desc: "โปรโมชั่นที่กำลังใช้งานในระบบ", module: "marketing" },
     { key: "performance", label: "Promo Performance", icon: BarChart2, desc: "ประสิทธิภาพของแต่ละแคมเปญโปรโมชั่น", module: "marketing", roles: ["admin", "marketing"] },
+    { key: "tiers", label: "จัดการ Tier", icon: Layers, desc: "นิยาม Tier ลูกค้า — การตลาดเสนอ ผู้บริหารอนุมัติ", module: "marketing", roles: ["admin", "marketing"] },
   ];
   const tabs = allTabs.filter(t => t.module === module && (!t.roles || t.roles.includes(role)));
   const currentTab = allTabs.find(t => t.key === activeTab) ?? tabs[0] ?? allTabs[0];
@@ -120,9 +123,18 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
     <span className="flex items-center gap-1.5 px-3 h-8 rounded-lg text-[0.78rem] font-500 text-[var(--muted-foreground)] border border-[var(--border)] whitespace-nowrap">
       ดูอย่างเดียว
     </span>
+  ) : activeTab === "tiers" && (role === "admin" || isMarketing) ? (
+    <button
+      onClick={() => setMarketingModal("tiers")}
+      className="flex items-center gap-1.5 px-3 h-8 rounded-lg text-[0.8rem] font-500 text-white transition-colors hover:opacity-90 whitespace-nowrap"
+      style={{ background: isMarketing ? "#ea580c" : "var(--primary)" }}
+    >
+      <Plus size={13} />
+      {isMarketing ? "เสนอเพิ่ม Tier" : "เพิ่ม Tier"}
+    </button>
   ) : isMarketing && marketingCreateTabs[activeTab] ? (
     <button
-      onClick={() => setMarketingModal(activeTab as "customers" | "promotions" | "pricing")}
+      onClick={() => setMarketingModal(activeTab as "customers" | "promotions")}
       className="flex items-center gap-1.5 px-3 h-8 rounded-lg text-[0.8rem] font-500 text-white transition-colors hover:opacity-90 whitespace-nowrap"
       style={{ background: "#ea580c" }}
     >
@@ -196,7 +208,11 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
     </div>
   ) : null;
 
-  const contentCard = (
+  const contentCard = activeTab === "dashboard" ? (
+    <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-[var(--shadow-sm)] overflow-hidden">
+      {module === "marketing" ? <MarketingDashboard /> : <SalesDashboard />}
+    </div>
+  ) : (
     <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-[var(--shadow-sm)] overflow-hidden">
       {activeTab === "orders" && <SOTable orders={orders} search={search} ownScope={ownScope} ownName={ownName} />}
       {activeTab === "customers" && (
@@ -206,11 +222,11 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
           onEdit={(c) => setEditCustomer(c)}
         />
       )}
-      {activeTab === "pricing" && <TierPricingTable search={search} />}
       {activeTab === "commission" && <CommissionTable search={search} ownScope={ownScope} ownName={ownName} />}
       {activeTab === "promotions" && <PromotionTable search={search} canManage={promoCanManage} />}
       {activeTab === "performance" && <PromoPerformanceTab />}
       {activeTab === "creditnote" && <CreditNoteTable search={search} canCreate={canSell} />}
+      {activeTab === "tiers" && <TierManageTable search={search} manageMode={tierManageMode} canApprove={role === "admin"} requestedBy={ownName} />}
     </div>
   );
 
@@ -266,7 +282,7 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
         )}
 
         {/* ทุกสิทธิ์ใช้เมนูย่อยในแถบซ้าย → เนื้อหาเต็มความกว้าง */}
-        {headingBar}
+        {activeTab !== "dashboard" && headingBar}
         {draftSection}
         {contentCard}
       </div>
@@ -313,8 +329,12 @@ export function SalesMarketingPage({ module }: { module: SalesModule }) {
       {marketingModal === "promotions" && (
         <AddPromotionModal onClose={() => setMarketingModal(null)} createdBy={ownName} onSubmit={(p) => { addPromotion(p); setMarketingModal(null); }} />
       )}
-      {marketingModal === "pricing" && (
-        <AddTierPricingModal onClose={() => setMarketingModal(null)} onSubmit={(t) => { addTierPricing(t); setMarketingModal(null); }} />
+      {marketingModal === "tiers" && (
+        <AddTierModal
+          approval={tierManageMode === "approval"}
+          onClose={() => setMarketingModal(null)}
+          onSubmit={(t) => { addTier(t, tierManageMode === "approval" ? { needsApproval: true, requestedBy: ownName } : undefined); setMarketingModal(null); }}
+        />
       )}
     </>
   );
@@ -976,7 +996,7 @@ function CustomerTable({
     .filter(c => c.name.includes(search) || c.tier.includes(search));
   const showActions = !!manageMode || !!canApprove;
 
-  const headers = ["ชื่อลูกค้า", "Tier", "ผู้ติดต่อ", "เบอร์โทร", "เซลส์เจ้าของ", "แผนกหลัก", "Total Orders", "Total Value", "สถานะ"];
+  const headers = ["ชื่อลูกค้า", "Tier", "ผู้ติดต่อ", "เบอร์โทร", "เซลส์เจ้าของ", "Total Orders", "Total Value", "สถานะ"];
 
   return (
     <div className="overflow-x-auto">
@@ -1011,7 +1031,6 @@ function CustomerTable({
                 <td className="px-4 py-3">{patch.contact ?? c.contact}</td>
                 <td className="px-4 py-3 text-[var(--muted-foreground)]">{patch.phone ?? c.phone}</td>
                 <td className="px-4 py-3 text-[var(--muted-foreground)]">{patch.salesOwner ?? c.salesOwner}</td>
-                <td className="px-4 py-3">{patch.dept ?? c.dept}</td>
                 <td className="px-4 py-3 font-500">{c.totalOrders}</td>
                 <td className="px-4 py-3 font-600">{formatCurrency(c.totalValue)}</td>
                 <td className="px-4 py-3">
@@ -1146,56 +1165,6 @@ function CommissionTable({ search, ownScope, ownName }: { search: string; ownSco
                 <td className="px-4 py-3 font-700">{formatCurrency(c.amount)}</td>
                 <td className="px-4 py-3 text-[var(--muted-foreground)]">{c.date}</td>
                 <td className="px-4 py-3">{statusBadge(c.status)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function TierPricingTable({ search }: { search: string }) {
-  const { tierPricing } = useErpStore();
-  const data = tierPricing.filter(p => p.name.includes(search) || p.sku.includes(search));
-  return (
-    <div>
-      <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--muted)] flex flex-wrap items-center gap-3 text-[0.75rem]">
-        <span className="text-[var(--muted-foreground)]">Tier Price เป็นราคาฐาน · Promotion ซ้อนเพิ่มได้ · ราคาสุดท้ายห้ามต่ำกว่า Floor Price</span>
-        <div className="flex items-center gap-2 ml-auto">
-          {tierMeta.map(t => (
-            <span key={t.key} className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-sm" style={{ background: t.color }} />
-              <span className="text-[var(--muted-foreground)]">{t.label}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-[0.82rem]">
-          <thead style={{ background: "var(--muted)" }}>
-            <tr>
-              <th className="px-4 py-2.5 text-left font-600 text-[0.75rem] text-[var(--muted-foreground)] whitespace-nowrap">สินค้า</th>
-              <th className="px-4 py-2.5 text-right font-600 text-[0.75rem] text-[var(--muted-foreground)]">ต้นทุนเฉลี่ย</th>
-              <th className="px-4 py-2.5 text-right font-600 text-[0.75rem] text-red-500">Floor Price</th>
-              {tierMeta.map(t => (
-                <th key={t.key} className="px-4 py-2.5 text-right font-600 text-[0.75rem] whitespace-nowrap" style={{ color: t.color }}>{t.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((p) => (
-              <tr key={p.sku} className="border-t border-[var(--border)] hover:bg-[var(--muted)] transition-colors">
-                <td className="px-4 py-3">
-                  <div className="font-500">{p.name}</div>
-                  <div className="text-[0.7rem] text-[var(--muted-foreground)] font-mono">{p.sku}</div>
-                </td>
-                <td className="px-4 py-3 text-right text-[var(--muted-foreground)]">{formatCurrency(p.avgCost)}</td>
-                <td className="px-4 py-3 text-right text-red-600 font-500">{formatCurrency(p.floorPrice)}</td>
-                <td className="px-4 py-3 text-right font-500">{formatCurrency(p.tier1)}</td>
-                <td className="px-4 py-3 text-right font-500">{formatCurrency(p.tier2)}</td>
-                <td className="px-4 py-3 text-right font-500">{formatCurrency(p.tier3)}</td>
-                <td className="px-4 py-3 text-right font-500">{formatCurrency(p.tier4)}</td>
               </tr>
             ))}
           </tbody>
@@ -1574,13 +1543,13 @@ function MField({ label, required, children }: { label: string; required?: boole
   );
 }
 
-const TIER_OPTIONS = ["ทั่วไป", "ผู้รับเหมา", "Dealer", "Founder"];
+const TIER_COLORS = ["#6b7280", "#d97706", "#2563eb", "#7c3aed", "#059669", "#dc2626", "#0d9488", "#db2777"];
 
 /* ── ฟอร์มลูกค้า (ใช้ร่วมกันระหว่างเพิ่ม/แก้ไข) ── */
-function CustomerFields({ name, setName, tier, setTier, contact, setContact, phone, setPhone, dept, setDept, salesOwner, setSalesOwner }: {
+function CustomerFields({ name, setName, tier, setTier, contact, setContact, phone, setPhone, salesOwner, setSalesOwner, tierOptions }: {
   name: string; setName: (v: string) => void; tier: string; setTier: (v: string) => void;
   contact: string; setContact: (v: string) => void; phone: string; setPhone: (v: string) => void;
-  dept: string; setDept: (v: string) => void; salesOwner: string; setSalesOwner: (v: string) => void;
+  salesOwner: string; setSalesOwner: (v: string) => void; tierOptions: string[];
 }) {
   return (
     <>
@@ -1588,7 +1557,7 @@ function CustomerFields({ name, setName, tier, setTier, contact, setContact, pho
       <div className="grid grid-cols-2 gap-3.5">
         <MField label="Tier" required>
           <select className={mInput} value={tier} onChange={e => setTier(e.target.value)}>
-            {TIER_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+            {tierOptions.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </MField>
         <MField label="ผู้ดูแล (Sales)"><input className={mInput} value={salesOwner} onChange={e => setSalesOwner(e.target.value)} /></MField>
@@ -1597,7 +1566,6 @@ function CustomerFields({ name, setName, tier, setTier, contact, setContact, pho
         <MField label="ผู้ติดต่อ" required><input className={mInput} value={contact} onChange={e => setContact(e.target.value)} /></MField>
         <MField label="เบอร์โทร" required><input className={mInput} value={phone} onChange={e => setPhone(e.target.value)} /></MField>
       </div>
-      <MField label="แผนกสินค้า"><input className={mInput} value={dept} onChange={e => setDept(e.target.value)} /></MField>
     </>
   );
 }
@@ -1615,13 +1583,13 @@ function ApprovalNote({ verb }: { verb: string }) {
 function AddCustomerModal({ onClose, onSubmit, approval }: {
   onClose: () => void;
   approval?: boolean;
-  onSubmit: (c: { name: string; tier: string; contact: string; phone: string; dept: string; salesOwner: string }) => void;
+  onSubmit: (c: { name: string; tier: string; contact: string; phone: string; salesOwner: string }) => void;
 }) {
+  const tierOptions = useErpStore().tiers.filter(t => t.status === "active").map(t => t.label);
   const [name, setName] = useState("");
-  const [tier, setTier] = useState(TIER_OPTIONS[0]);
+  const [tier, setTier] = useState(tierOptions[0] ?? "ทั่วไป");
   const [contact, setContact] = useState("");
   const [phone, setPhone] = useState("");
-  const [dept, setDept] = useState("แผงโซลล่าเซลล์");
   const [salesOwner, setSalesOwner] = useState("วิภา สุขใจ");
   const invalid = !name.trim() || !contact.trim() || !phone.trim();
 
@@ -1629,9 +1597,9 @@ function AddCustomerModal({ onClose, onSubmit, approval }: {
     <MarketingModal
       title="เพิ่มลูกค้าใหม่" subtitle={approval ? "ลูกค้าใหม่ต้องผ่านการอนุมัติก่อนใช้งาน" : "เพิ่มข้อมูลลูกค้าและ Tier"}
       onClose={onClose} submitLabel={approval ? "ส่งขออนุมัติ" : "เพิ่มลูกค้า"} disabled={invalid}
-      onSubmit={() => onSubmit({ name, tier, contact, phone, dept, salesOwner })}
+      onSubmit={() => onSubmit({ name, tier, contact, phone, salesOwner })}
     >
-      <CustomerFields {...{ name, setName, tier, setTier, contact, setContact, phone, setPhone, dept, setDept, salesOwner, setSalesOwner }} />
+      <CustomerFields {...{ name, setName, tier, setTier, contact, setContact, phone, setPhone, salesOwner, setSalesOwner, tierOptions }} />
       {approval && <ApprovalNote verb="เพิ่มลูกค้า" />}
     </MarketingModal>
   );
@@ -1644,11 +1612,12 @@ function EditCustomerModal({ customer, onClose, onSubmit, approval }: {
   approval?: boolean;
   onSubmit: (patch: CustomerPatch) => void;
 }) {
+  const activeTiers = useErpStore().tiers.filter(t => t.status === "active").map(t => t.label);
+  const tierOptions = activeTiers.includes(customer.tier) ? activeTiers : [customer.tier, ...activeTiers];
   const [name, setName] = useState(customer.name);
   const [tier, setTier] = useState(customer.tier);
   const [contact, setContact] = useState(customer.contact);
   const [phone, setPhone] = useState(customer.phone);
-  const [dept, setDept] = useState(customer.dept);
   const [salesOwner, setSalesOwner] = useState(customer.salesOwner);
   const invalid = !name.trim() || !contact.trim() || !phone.trim();
 
@@ -1656,9 +1625,9 @@ function EditCustomerModal({ customer, onClose, onSubmit, approval }: {
     <MarketingModal
       title="แก้ไขข้อมูลลูกค้า" subtitle={approval ? "การแก้ไขต้องผ่านการอนุมัติก่อนมีผล" : `แก้ไข ${customer.name}`}
       onClose={onClose} submitLabel={approval ? "ส่งขออนุมัติแก้ไข" : "บันทึกการแก้ไข"} disabled={invalid}
-      onSubmit={() => onSubmit({ name, tier, contact, phone, dept, salesOwner })}
+      onSubmit={() => onSubmit({ name, tier, contact, phone, salesOwner })}
     >
-      <CustomerFields {...{ name, setName, tier, setTier, contact, setContact, phone, setPhone, dept, setDept, salesOwner, setSalesOwner }} />
+      <CustomerFields {...{ name, setName, tier, setTier, contact, setContact, phone, setPhone, salesOwner, setSalesOwner, tierOptions }} />
       {approval && <ApprovalNote verb="แก้ไขลูกค้า" />}
     </MarketingModal>
   );
@@ -1670,6 +1639,7 @@ function AddPromotionModal({ onClose, onSubmit, createdBy }: {
   createdBy: string;
   onSubmit: (p: { name: string; type: string; value: number; tier: string[]; startDate: string; endDate: string; createdBy: string }) => void;
 }) {
+  const tierOptions = useErpStore().tiers.filter(t => t.status === "active").map(t => t.label);
   const [name, setName] = useState("");
   const [type, setType] = useState("percent");
   const [value, setValue] = useState(5);
@@ -1702,7 +1672,7 @@ function AddPromotionModal({ onClose, onSubmit, createdBy }: {
       </div>
       <MField label="Tier ที่ใช้ได้" required>
         <div className="flex flex-wrap gap-2">
-          {TIER_OPTIONS.map(t => {
+          {tierOptions.map(t => {
             const on = tier.includes(t);
             return (
               <button
@@ -1728,41 +1698,256 @@ function AddPromotionModal({ onClose, onSubmit, createdBy }: {
   );
 }
 
-/* ── เพิ่ม Segment / Tier Pricing ── */
-function AddTierPricingModal({ onClose, onSubmit }: {
-  onClose: () => void;
-  onSubmit: (t: { sku: string; name: string; avgCost: number; floorPrice: number; tier1: number; tier2: number; tier3: number; tier4: number }) => void;
+/* ── จัดการนิยาม Tier ลูกค้า (การตลาดเสนอ · ผู้บริหารอนุมัติ) ── */
+function TierManageTable({ search, manageMode, canApprove, requestedBy }: {
+  search: string;
+  manageMode?: "direct" | "approval";
+  canApprove?: boolean;
+  requestedBy?: string;
 }) {
-  const [sku, setSku] = useState("");
-  const [name, setName] = useState("");
-  const [avgCost, setAvgCost] = useState(0);
-  const [floorPrice, setFloorPrice] = useState(0);
-  const [tier1, setTier1] = useState(0);
-  const [tier2, setTier2] = useState(0);
-  const [tier3, setTier3] = useState(0);
-  const [tier4, setTier4] = useState(0);
-  const invalid = !sku.trim() || !name.trim() || tier1 <= 0;
+  const { tiers, updateTier, deleteTier, approveTier, rejectTier } = useErpStore();
+  const [editing, setEditing] = useState<Tier | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Tier | null>(null);
+  const data = tiers.filter(t => t.label.includes(search));
+  const showActions = !!manageMode || !!canApprove;
+  const headers = ["Tier", "ส่วนลดจากราคาฐาน", "รับโปรโมชั่นอื่น", "สถานะ"];
+
+  return (
+    <div>
+      <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--muted)] text-[0.75rem] text-[var(--muted-foreground)]">
+        นิยาม Tier ลูกค้า · <span className="font-500">ส่วนลดจากราคาฐาน</span> = ส่วนลดจากราคา &ldquo;ทั่วไป&rdquo; (ยิ่ง % สูง ยิ่งถูก) · <span className="font-500">รับโปรโมชั่นอื่น</span> = ใช้โปรโมชั่นซ้อนได้หรือไม่
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-[0.82rem]">
+          <thead style={{ background: "var(--muted)" }}>
+            <tr>
+              {headers.map(h => (
+                <th key={h} className="px-4 py-2.5 text-left font-600 text-[0.75rem] text-[var(--muted-foreground)] whitespace-nowrap">{h}</th>
+              ))}
+              {showActions && <th className="px-4 py-2.5 text-right font-600 text-[0.75rem] text-[var(--muted-foreground)] whitespace-nowrap">จัดการ</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((t) => {
+              const pending = t.pendingAction ?? null;
+              const patch = pending === "edit" ? (t.pendingPatch ?? {}) : {};
+              const dispLabel = patch.label ?? t.label;
+              const dispColor = patch.color ?? t.color;
+              const dispDiscount = patch.discountPercent ?? t.discountPercent;
+              const dispAllow = patch.allowPromotions ?? t.allowPromotions;
+              return (
+                <tr key={t.id} className={`border-t border-[var(--border)] hover:bg-[var(--muted)] transition-colors ${pending === "delete" ? "opacity-60" : ""}`}>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: dispColor }} />
+                      <span className="font-500">{dispLabel}</span>
+                      {patch.label && patch.label !== t.label && <span className="text-[0.72rem] text-orange-600">(เดิม {t.label})</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    {dispDiscount}%
+                    {patch.discountPercent != null && patch.discountPercent !== t.discountPercent && (
+                      <span className="ml-1.5 text-[0.72rem] text-orange-600">(เดิม {t.discountPercent}%)</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {dispAllow ? <Badge variant="success">ได้</Badge> : <Badge variant="ghost">ไม่ได้</Badge>}
+                    {patch.allowPromotions != null && patch.allowPromotions !== t.allowPromotions && (
+                      <span className="ml-1.5 text-[0.72rem] text-orange-600">(เดิม {t.allowPromotions ? "ได้" : "ไม่ได้"})</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      {statusBadge(t.status)}
+                      {pending && <Badge variant="warning"><Clock size={10} />{PENDING_LABEL[pending]}</Badge>}
+                    </div>
+                  </td>
+                  {showActions && (
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-1.5">
+                        {pending && canApprove ? (
+                          <>
+                            <button
+                              onClick={() => approveTier(t.id)}
+                              className="flex items-center gap-1 px-2.5 h-7 rounded-md text-[0.73rem] font-500 text-white bg-green-600 hover:bg-green-700 transition-colors"
+                            >
+                              <Check size={12} />อนุมัติ
+                            </button>
+                            <button
+                              onClick={() => rejectTier(t.id)}
+                              className="flex items-center gap-1 px-2.5 h-7 rounded-md text-[0.73rem] font-500 border border-red-300 text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              <X size={12} />ปฏิเสธ
+                            </button>
+                          </>
+                        ) : pending && !canApprove ? (
+                          <span className="text-[0.72rem] text-[var(--muted-foreground)] italic">รอผู้บริหารอนุมัติ</span>
+                        ) : manageMode ? (
+                          <>
+                            <button
+                              onClick={() => setEditing(t)}
+                              className="flex items-center gap-1 px-2.5 h-7 rounded-md text-[0.73rem] font-500 border border-[var(--border)] hover:bg-[var(--muted)] transition-colors"
+                            >
+                              <FileEdit size={12} />แก้ไข
+                            </button>
+                            <button
+                              onClick={() => setConfirmDelete(t)}
+                              className="flex items-center gap-1 px-2.5 h-7 rounded-md text-[0.73rem] font-500 border border-red-200 text-red-500 hover:bg-red-50 transition-colors"
+                            >
+                              <Trash2 size={12} />ลบ
+                            </button>
+                          </>
+                        ) : null}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {editing && (
+        <EditTierModal
+          tier={editing}
+          approval={manageMode === "approval"}
+          onClose={() => setEditing(null)}
+          onSubmit={(patch) => {
+            updateTier(editing.id, patch, manageMode === "approval" ? { needsApproval: true, requestedBy } : undefined);
+            setEditing(null);
+          }}
+        />
+      )}
+      {confirmDelete && (
+        <ConfirmDeleteTierModal
+          tier={confirmDelete}
+          approval={manageMode === "approval"}
+          onClose={() => setConfirmDelete(null)}
+          onConfirm={() => {
+            deleteTier(confirmDelete.id, manageMode === "approval" ? { needsApproval: true, requestedBy } : undefined);
+            setConfirmDelete(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ── ฟอร์ม Tier (ใช้ร่วมกันระหว่างเพิ่ม/แก้ไข) ── */
+function TierFields({ label, setLabel, color, setColor, discount, setDiscount, allow, setAllow }: {
+  label: string; setLabel: (v: string) => void;
+  color: string; setColor: (v: string) => void;
+  discount: number; setDiscount: (v: number) => void;
+  allow: boolean; setAllow: (v: boolean) => void;
+}) {
+  return (
+    <>
+      <MField label="ชื่อ Tier" required><input className={mInput} value={label} onChange={e => setLabel(e.target.value)} placeholder="เช่น พรีเมี่ยม" /></MField>
+      <MField label="สี">
+        <div className="flex flex-wrap gap-2">
+          {TIER_COLORS.map(c => (
+            <button
+              key={c}
+              onClick={() => setColor(c)}
+              className={`w-7 h-7 rounded-full border-2 transition-all ${color === c ? "border-[var(--foreground)] scale-110" : "border-transparent"}`}
+              style={{ background: c }}
+            />
+          ))}
+        </div>
+      </MField>
+      <MField label="ส่วนลดจากราคาฐาน (%)">
+        <input type="number" min={0} max={100} className={mInput} value={discount} onChange={e => setDiscount(Number(e.target.value))} />
+      </MField>
+      <MField label="รับโปรโมชั่นอื่นซ้อนได้ไหม">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setAllow(true)}
+            className={`px-4 h-9 rounded-lg text-[0.8rem] font-500 border transition-colors ${allow ? "bg-green-50 border-green-300 text-green-700" : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--muted)]"}`}
+          >
+            ได้
+          </button>
+          <button
+            onClick={() => setAllow(false)}
+            className={`px-4 h-9 rounded-lg text-[0.8rem] font-500 border transition-colors ${!allow ? "bg-red-50 border-red-300 text-red-600" : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--muted)]"}`}
+          >
+            ไม่ได้
+          </button>
+        </div>
+      </MField>
+    </>
+  );
+}
+
+/* ── เพิ่ม Tier ── */
+function AddTierModal({ onClose, onSubmit, approval }: {
+  onClose: () => void;
+  approval?: boolean;
+  onSubmit: (t: { label: string; color: string; discountPercent: number; allowPromotions: boolean }) => void;
+}) {
+  const [label, setLabel] = useState("");
+  const [color, setColor] = useState(TIER_COLORS[4]);
+  const [discount, setDiscount] = useState(0);
+  const [allow, setAllow] = useState(true);
+  const invalid = !label.trim();
 
   return (
     <MarketingModal
-      title="เพิ่ม Segment Pricing" subtitle="กำหนดราคาตาม Tier ต่อสินค้า"
-      onClose={onClose} submitLabel="เพิ่มราคา" disabled={invalid}
-      onSubmit={() => onSubmit({ sku, name, avgCost, floorPrice, tier1, tier2, tier3, tier4 })}
+      title="เพิ่ม Tier ใหม่" subtitle={approval ? "Tier ใหม่ต้องผ่านการอนุมัติก่อนใช้งาน" : "กำหนดนิยาม Tier ลูกค้า"}
+      onClose={onClose} submitLabel={approval ? "ส่งขออนุมัติ" : "เพิ่ม Tier"} disabled={invalid}
+      onSubmit={() => onSubmit({ label, color, discountPercent: discount, allowPromotions: allow })}
     >
-      <div className="grid grid-cols-2 gap-3.5">
-        <MField label="SKU" required><input className={mInput} value={sku} onChange={e => setSku(e.target.value)} /></MField>
-        <MField label="ชื่อสินค้า" required><input className={mInput} value={name} onChange={e => setName(e.target.value)} /></MField>
+      <TierFields {...{ label, setLabel, color, setColor, discount, setDiscount, allow, setAllow }} />
+      {approval && <ApprovalNote verb="เพิ่ม Tier" />}
+    </MarketingModal>
+  );
+}
+
+/* ── แก้ไข Tier ── */
+function EditTierModal({ tier, onClose, onSubmit, approval }: {
+  tier: Tier;
+  onClose: () => void;
+  approval?: boolean;
+  onSubmit: (patch: TierPatch) => void;
+}) {
+  const [label, setLabel] = useState(tier.label);
+  const [color, setColor] = useState(tier.color);
+  const [discount, setDiscount] = useState(tier.discountPercent);
+  const [allow, setAllow] = useState(tier.allowPromotions);
+  const invalid = !label.trim();
+
+  return (
+    <MarketingModal
+      title="แก้ไข Tier" subtitle={approval ? "การแก้ไขต้องผ่านการอนุมัติก่อนมีผล" : `แก้ไข ${tier.label}`}
+      onClose={onClose} submitLabel={approval ? "ส่งขออนุมัติแก้ไข" : "บันทึกการแก้ไข"} disabled={invalid}
+      onSubmit={() => onSubmit({ label, color, discountPercent: discount, allowPromotions: allow })}
+    >
+      <TierFields {...{ label, setLabel, color, setColor, discount, setDiscount, allow, setAllow }} />
+      {approval && <ApprovalNote verb="แก้ไข Tier" />}
+    </MarketingModal>
+  );
+}
+
+/* ── ยืนยันลบ Tier ── */
+function ConfirmDeleteTierModal({ tier, approval, onClose, onConfirm }: {
+  tier: Tier; approval: boolean; onClose: () => void; onConfirm: () => void;
+}) {
+  return (
+    <MarketingModal
+      title="ยืนยันการลบ Tier"
+      subtitle={approval ? "คำขอลบจะถูกส่งให้ผู้บริหารอนุมัติก่อน" : "ลบนิยาม Tier ออกจากระบบทันที"}
+      onClose={onClose} submitLabel={approval ? "ส่งขออนุมัติลบ" : "ลบ Tier"}
+      onSubmit={onConfirm} danger
+    >
+      <div className="text-[0.85rem]">
+        ต้องการลบ Tier <span className="font-700">{tier.label}</span> หรือไม่?
       </div>
-      <div className="grid grid-cols-2 gap-3.5">
-        <MField label="ต้นทุนเฉลี่ย"><input type="number" min={0} className={mInput} value={avgCost} onChange={e => setAvgCost(Number(e.target.value))} /></MField>
-        <MField label="Floor Price"><input type="number" min={0} className={mInput} value={floorPrice} onChange={e => setFloorPrice(Number(e.target.value))} /></MField>
-      </div>
-      <div className="grid grid-cols-4 gap-3">
-        <MField label="ทั่วไป" required><input type="number" min={0} className={mInput} value={tier1} onChange={e => setTier1(Number(e.target.value))} /></MField>
-        <MField label="ผู้รับเหมา"><input type="number" min={0} className={mInput} value={tier2} onChange={e => setTier2(Number(e.target.value))} /></MField>
-        <MField label="Dealer"><input type="number" min={0} className={mInput} value={tier3} onChange={e => setTier3(Number(e.target.value))} /></MField>
-        <MField label="Founder"><input type="number" min={0} className={mInput} value={tier4} onChange={e => setTier4(Number(e.target.value))} /></MField>
-      </div>
+      {approval && (
+        <div className="flex items-start gap-2 px-3 py-2 rounded-lg border border-amber-200 bg-amber-50 text-[0.72rem] text-amber-700">
+          <Info size={13} className="mt-0.5 flex-shrink-0" />
+          <span>คำขอลบจะอยู่สถานะ <strong>รออนุมัติ</strong> จนกว่าผู้บริหารจะอนุมัติ จึงจะมีผล</span>
+        </div>
+      )}
     </MarketingModal>
   );
 }

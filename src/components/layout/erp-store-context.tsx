@@ -5,7 +5,7 @@ import {
   mockReturns, mockCreditNotes, mockProducts, mockSuppliers,
   mockPurchaseOrders, mockGoodsReceipts, mockStockAdjustments,
   mockSalesOrders, mockCustomers, mockCommissions, mockPromotions,
-  mockTierPricing, mockMovementLog,
+  mockMovementLog, mockTiers,
 } from "@/lib/mock-data";
 
 // วันที่อ้างอิงของระบบเดโม (นาฬิกาในแอปแสดง จ. 14 มิ.ย. 2567)
@@ -20,7 +20,7 @@ export type StockAdjustment = typeof mockStockAdjustments[number];
 export type SalesOrder = typeof mockSalesOrders[number];
 type CustomerBase = typeof mockCustomers[number];
 // ฟิลด์ที่แก้ไขได้ของลูกค้า (ใช้กับ pendingPatch ตอนรออนุมัติแก้ไข)
-export type CustomerPatch = Partial<Pick<CustomerBase, "name" | "tier" | "contact" | "phone" | "dept" | "salesOwner">>;
+export type CustomerPatch = Partial<Pick<CustomerBase, "name" | "tier" | "contact" | "phone" | "salesOwner">>;
 // ลูกค้า + ฟิลด์รออนุมัติ (การตลาดสร้าง/แก้/ลบ → รอผู้บริหารอนุมัติ)
 export type Customer = CustomerBase & {
   pendingAction?: "add" | "edit" | "delete" | null;
@@ -29,7 +29,15 @@ export type Customer = CustomerBase & {
 };
 export type Commission = typeof mockCommissions[number];
 export type Promotion = typeof mockPromotions[number];
-export type TierPricing = typeof mockTierPricing[number];
+type TierBase = typeof mockTiers[number];
+// ฟิลด์ที่แก้ไขได้ของ Tier (ใช้กับ pendingPatch ตอนรออนุมัติแก้ไข)
+export type TierPatch = Partial<Pick<TierBase, "label" | "color" | "discountPercent" | "allowPromotions">>;
+// Tier + ฟิลด์รออนุมัติ (การตลาดเสนอ → รอผู้บริหารอนุมัติ)
+export type Tier = TierBase & {
+  pendingAction?: "add" | "edit" | "delete" | null;
+  pendingPatch?: TierPatch | null;
+  requestedBy?: string | null;
+};
 
 export interface ReturnRec {
   id: string;
@@ -80,15 +88,15 @@ export interface MovementRec {
 
 // ---------- input payloads ----------
 interface NewProductInput { sku: string; name: string; category: string; avgCost: number; price1: number; price2: number; price3: number; price4: number; stock: number; reorderPoint: number; reorderQty: number; supplier: string; }
-interface NewSupplierInput { name: string; contact: string; phone: string; email: string; category: string; paymentTerm: string; taxId: string; bank: string; }
+interface NewSupplierInput { name: string; contact: string; phone: string; email: string; paymentTerm: string; taxId: string; bank: string; }
 interface NewPOInput { supplierId: string; product: string; qty: number; unitCost: number; }
 interface ReceiveGoodsInput { poId: string; product: string; orderedQty: number; receivedQty: number; shortfallReason?: string | null; }
 interface NewAdjustInput { product: string; sku: string; actualQty: number; reason: string; }
 interface NewSOInput { customer: string; tier: string; items: { name: string; qty: number; unitPrice: number; dept: string }[]; discount: number; salesBy: string; }
-interface NewCustomerInput { name: string; tier: string; contact: string; phone: string; dept: string; salesOwner: string; }
+interface NewCustomerInput { name: string; tier: string; contact: string; phone: string; salesOwner: string; }
 interface CustomerChangeOpts { needsApproval?: boolean; requestedBy?: string; }
 interface NewPromotionInput { name: string; type: string; value: number; tier: string[]; startDate: string; endDate: string; createdBy: string; }
-interface NewTierPricingInput { sku: string; name: string; avgCost: number; floorPrice: number; tier1: number; tier2: number; tier3: number; tier4: number; }
+interface NewTierInput { label: string; color: string; discountPercent: number; allowPromotions: boolean; }
 
 interface ErpStore {
   products: Product[];
@@ -100,7 +108,7 @@ interface ErpStore {
   customers: Customer[];
   commissions: Commission[];
   promotions: Promotion[];
-  tierPricing: TierPricing[];
+  tiers: Tier[];
   returns: ReturnRec[];
   creditNotes: CreditNote[];
   movements: MovementRec[];
@@ -124,7 +132,13 @@ interface ErpStore {
   approveCustomer: (id: string) => void;                        // ผู้บริหารอนุมัติ → ใช้คำขอที่ค้างอยู่
   rejectCustomer: (id: string) => void;                         // ผู้บริหารปฏิเสธ → ย้อนกลับ/ทิ้งคำขอ
   addPromotion: (p: NewPromotionInput) => void;                 // → สถานะ pending-approval
-  addTierPricing: (t: NewTierPricingInput) => void;
+
+  // ── Tier ลูกค้า: การตลาด needsApproval → รออนุมัติ · ผู้บริหารทำได้ทันที ──
+  addTier: (t: NewTierInput, opts?: CustomerChangeOpts) => void;
+  updateTier: (id: string, patch: TierPatch, opts?: CustomerChangeOpts) => void;
+  deleteTier: (id: string, opts?: CustomerChangeOpts) => void;
+  approveTier: (id: string) => void;                            // ผู้บริหารอนุมัติ → ใช้คำขอที่ค้างอยู่
+  rejectTier: (id: string) => void;                             // ผู้บริหารปฏิเสธ → ย้อนกลับ/ทิ้งคำขอ
 
   // return → CN flow
   receiveReturn: (id: string, receivedQty: number, shortfallReason?: string) => void;
@@ -145,7 +159,7 @@ export function ErpStoreProvider({ children }: { children: React.ReactNode }) {
   const [customers, setCustomers] = useState<Customer[]>(() => mockCustomers.map(c => ({ ...c })));
   const [commissions, setCommissions] = useState<Commission[]>(() => mockCommissions.map(c => ({ ...c })));
   const [promotions, setPromotions] = useState<Promotion[]>(() => mockPromotions.map(p => ({ ...p })));
-  const [tierPricing, setTierPricing] = useState<TierPricing[]>(() => mockTierPricing.map(t => ({ ...t })));
+  const [tiers, setTiers] = useState<Tier[]>(() => mockTiers.map(t => ({ ...t })));
   const [returns, setReturns] = useState<ReturnRec[]>(() => mockReturns.map(r => ({ ...r })) as ReturnRec[]);
   const [creditNotes, setCreditNotes] = useState<CreditNote[]>(() => mockCreditNotes.map(c => ({ ...c })) as CreditNote[]);
   const [movements, setMovements] = useState<MovementRec[]>(() => mockMovementLog.map(m => ({ ...m })));
@@ -437,9 +451,60 @@ export function ErpStoreProvider({ children }: { children: React.ReactNode }) {
     }, ...prev]);
   }
 
-  // ── เพิ่ม Segment / Tier Pricing ──
-  function addTierPricing(input: NewTierPricingInput) {
-    setTierPricing(prev => [{ ...input }, ...prev]);
+  // ── จัดการนิยาม Tier ลูกค้า — การตลาด: รออนุมัติ · ผู้บริหาร: ใช้งานได้ทันที ──
+  function addTier(input: NewTierInput, opts?: CustomerChangeOpts) {
+    const id = `T${String(nextNum()).padStart(2, "0")}`;
+    const needs = opts?.needsApproval ?? false;
+    setTiers(prev => [{
+      ...input, id,
+      status: needs ? "pending-approval" : "active",
+      pendingAction: needs ? "add" : null,
+      pendingPatch: null,
+      requestedBy: needs ? (opts?.requestedBy ?? null) : null,
+    }, ...prev]);
+  }
+
+  function updateTier(id: string, patch: TierPatch, opts?: CustomerChangeOpts) {
+    if (opts?.needsApproval) {
+      setTiers(prev => prev.map(t =>
+        t.id === id ? { ...t, pendingAction: "edit", pendingPatch: patch, requestedBy: opts.requestedBy ?? null } : t
+      ));
+    } else {
+      setTiers(prev => prev.map(t =>
+        t.id === id ? { ...t, ...patch, pendingAction: null, pendingPatch: null, requestedBy: null } : t
+      ));
+    }
+  }
+
+  function deleteTier(id: string, opts?: CustomerChangeOpts) {
+    if (opts?.needsApproval) {
+      setTiers(prev => prev.map(t =>
+        t.id === id ? { ...t, pendingAction: "delete", requestedBy: opts.requestedBy ?? null } : t
+      ));
+    } else {
+      setTiers(prev => prev.filter(t => t.id !== id));
+    }
+  }
+
+  // ── ผู้บริหารอนุมัติคำขอของการตลาด → ลงมือทำจริง ──
+  function approveTier(id: string) {
+    setTiers(prev => prev.flatMap(t => {
+      if (t.id !== id) return [t];
+      if (t.pendingAction === "delete") return [];
+      if (t.pendingAction === "edit") {
+        return [{ ...t, ...(t.pendingPatch ?? {}), status: "active", pendingAction: null, pendingPatch: null, requestedBy: null }];
+      }
+      return [{ ...t, status: "active", pendingAction: null, pendingPatch: null, requestedBy: null }];
+    }));
+  }
+
+  // ── ผู้บริหารปฏิเสธ → ทิ้งคำขอ (add ทิ้งทั้งแถว, edit/delete ย้อนกลับเป็น active) ──
+  function rejectTier(id: string) {
+    setTiers(prev => prev.flatMap(t => {
+      if (t.id !== id) return [t];
+      if (t.pendingAction === "add") return [];
+      return [{ ...t, status: "active", pendingAction: null, pendingPatch: null, requestedBy: null }];
+    }));
   }
 
   // ① สต๊อกรับของคืน + จำนวนที่รับจริง → สถานะ "รอผู้บริหารอนุมัติปรับสต๊อก"
@@ -519,11 +584,12 @@ export function ErpStoreProvider({ children }: { children: React.ReactNode }) {
   return (
     <Ctx.Provider value={{
       products, suppliers, purchaseOrders, goodsReceipts, stockAdjustments,
-      salesOrders, customers, commissions, promotions, tierPricing,
+      salesOrders, customers, commissions, promotions,
       returns, creditNotes, movements,
       addProduct, addSupplier, updateSupplier, createPO, receiveGoods, createAdjustment, approveAdjustment, createReturnRequest,
       createSalesOrder, addCustomer, updateCustomer, deleteCustomer, approveCustomer, rejectCustomer,
-      addPromotion, addTierPricing,
+      addPromotion,
+      tiers, addTier, updateTier, deleteTier, approveTier, rejectTier,
       receiveReturn, rejectReturn, approveStockAdjust, createCreditNote,
     }}>
       {children}

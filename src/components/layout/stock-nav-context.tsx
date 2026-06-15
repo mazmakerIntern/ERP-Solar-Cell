@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useRole } from "./role-context";
 
 export type StockTab =
-  | "products" | "suppliers" | "po" | "gr" | "adjust" | "return" | "cost" | "log";
+  | "dashboard" | "products" | "suppliers" | "po" | "gr" | "adjust" | "return" | "cost" | "log";
 
 interface StockNavCtx {
   tab: StockTab;
@@ -13,16 +13,22 @@ interface StockNavCtx {
 
 const Ctx = createContext<StockNavCtx | null>(null);
 
+function defaultStockTab(role: string): StockTab {
+  if (role === "admin") return "dashboard";
+  if (role === "accounting") return "suppliers";
+  return "products";
+}
+
 export function StockNavProvider({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
-  const [tab, setTab] = useState<StockTab>("products");
+  const [tab, setTab] = useState<StockTab>(() => defaultStockTab(role));
   const prevRole = useRef(role);
 
   // ตั้งแท็บเริ่มต้นใหม่เมื่อ "สลับสิทธิ์" เท่านั้น (บัญชีเริ่มที่ผู้ขาย)
   useEffect(() => {
     if (prevRole.current !== role) {
       prevRole.current = role;
-      setTab(role === "accounting" ? "suppliers" : "products");
+      setTab(defaultStockTab(role));
     }
   }, [role]);
 

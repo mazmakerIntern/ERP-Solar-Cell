@@ -24,11 +24,11 @@ export const mockProducts = [
 ];
 
 export const mockSuppliers = [
-  { id: "S001", name: "บริษัท ไทยโซลาร์ จำกัด", contact: "คุณสมชาย", phone: "02-123-4567", email: "contact@thaisolar.co.th", category: "แผง", paymentTerm: "30 วัน", taxId: "0105563012345", bank: "กสิกรไทย 123-4-56789-0", status: "active" },
-  { id: "S002", name: "บริษัท เพาเวอร์เทค อินเตอร์ จำกัด", contact: "คุณวิชัย", phone: "02-234-5678", email: "info@powertech.co.th", category: "อินเวอร์เตอร์", paymentTerm: "45 วัน", taxId: "0105563023456", bank: "ไทยพาณิชย์ 234-5-67890-1", status: "active" },
-  { id: "S003", name: "บริษัท กรีนเอ็นเนอร์จี จำกัด", contact: "คุณนภา", phone: "02-345-6789", email: "sale@greenenergy.co.th", category: "แบตเตอรี่", paymentTerm: "30 วัน", taxId: "0105563034567", bank: "กรุงเทพ 345-6-78901-2", status: "active" },
-  { id: "S004", name: "บริษัท อะลูมาสตรัคท์ จำกัด", contact: "คุณประสิทธิ์", phone: "034-123-456", email: "sales@alustruct.co.th", category: "โครงสร้าง", paymentTerm: "15 วัน", taxId: "0105563045678", bank: "กรุงไทย 456-7-89012-3", status: "active" },
-  { id: "S005", name: "บริษัท เคเบิลไทย จำกัด", contact: "คุณมนตรี", phone: "035-234-567", email: "info@cablethai.co.th", category: "สายไฟ", paymentTerm: "15 วัน", taxId: "0105563056789", bank: "กสิกรไทย 567-8-90123-4", status: "active" },
+  { id: "S001", name: "บริษัท ไทยโซลาร์ จำกัด", contact: "คุณสมชาย", phone: "02-123-4567", email: "contact@thaisolar.co.th", paymentTerm: "30 วัน", taxId: "0105563012345", bank: "กสิกรไทย 123-4-56789-0", status: "active" },
+  { id: "S002", name: "บริษัท เพาเวอร์เทค อินเตอร์ จำกัด", contact: "คุณวิชัย", phone: "02-234-5678", email: "info@powertech.co.th", paymentTerm: "45 วัน", taxId: "0105563023456", bank: "ไทยพาณิชย์ 234-5-67890-1", status: "active" },
+  { id: "S003", name: "บริษัท กรีนเอ็นเนอร์จี จำกัด", contact: "คุณนภา", phone: "02-345-6789", email: "sale@greenenergy.co.th", paymentTerm: "30 วัน", taxId: "0105563034567", bank: "กรุงเทพ 345-6-78901-2", status: "active" },
+  { id: "S004", name: "บริษัท อะลูมาสตรัคท์ จำกัด", contact: "คุณประสิทธิ์", phone: "034-123-456", email: "sales@alustruct.co.th", paymentTerm: "15 วัน", taxId: "0105563045678", bank: "กรุงไทย 456-7-89012-3", status: "active" },
+  { id: "S005", name: "บริษัท เคเบิลไทย จำกัด", contact: "คุณมนตรี", phone: "035-234-567", email: "info@cablethai.co.th", paymentTerm: "15 วัน", taxId: "0105563056789", bank: "กสิกรไทย 567-8-90123-4", status: "active" },
 ];
 
 export const mockPurchaseOrders = [
@@ -79,29 +79,22 @@ export const mockCreditNotes = [
 
 // ---------- SALES & MARKETING ----------
 
-export const mockTierPricing = [
-  { sku: "SC-MON-400W", name: "แผงโซลาร์ Mono 400W", avgCost: 4200, floorPrice: 4400, tier1: 5500, tier2: 5200, tier3: 4800, tier4: 4500 },
-  { sku: "SC-MON-550W", name: "แผงโซลาร์ Mono 550W", avgCost: 5800, floorPrice: 6000, tier1: 7500, tier2: 7100, tier3: 6600, tier4: 6200 },
-  { sku: "INV-5KW-HYB", name: "อินเวอร์เตอร์ Hybrid 5kW", avgCost: 28000, floorPrice: 29500, tier1: 36000, tier2: 34000, tier3: 31500, tier4: 30000 },
-  { sku: "INV-10KW-HYB", name: "อินเวอร์เตอร์ Hybrid 10kW", avgCost: 52000, floorPrice: 54000, tier1: 68000, tier2: 64000, tier3: 60000, tier4: 57000 },
-  { sku: "BAT-LI-100AH", name: "แบตเตอรี่ Lithium 100Ah", avgCost: 18000, floorPrice: 18800, tier1: 23000, tier2: 21500, tier3: 20000, tier4: 19000 },
-  { sku: "BAT-LI-200AH", name: "แบตเตอรี่ Lithium 200Ah", avgCost: 35000, floorPrice: 36500, tier1: 45000, tier2: 42000, tier3: 39000, tier4: 37000 },
-];
-
-export const tierMeta = [
-  { key: "tier1", label: "ทั่วไป", color: "#6b7280" },
-  { key: "tier2", label: "ผู้รับเหมา", color: "#d97706" },
-  { key: "tier3", label: "Dealer", color: "#2563eb" },
-  { key: "tier4", label: "Founder", color: "#7c3aed" },
+// นิยาม Tier ลูกค้า — จัดการได้จริง (การตลาดเสนอ · ผู้บริหารอนุมัติ)
+// discountPercent = ส่วนลดจากราคาฐาน (ราคา "ทั่วไป") · allowPromotions = รับโปรโมชั่นอื่นซ้อนได้ไหม
+export const mockTiers = [
+  { id: "T1", label: "ทั่วไป", color: "#6b7280", discountPercent: 0, allowPromotions: true, status: "active" },
+  { id: "T2", label: "ผู้รับเหมา", color: "#d97706", discountPercent: 5, allowPromotions: true, status: "active" },
+  { id: "T3", label: "Dealer", color: "#2563eb", discountPercent: 12, allowPromotions: true, status: "active" },
+  { id: "T4", label: "Founder", color: "#7c3aed", discountPercent: 18, allowPromotions: true, status: "active" },
 ];
 
 
 export const mockCustomers = [
-  { id: "C001", name: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", contact: "คุณอรุณ", phone: "081-234-5678", dept: "แผงโซลล่าเซลล์", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 28, totalValue: 4850000 },
-  { id: "C002", name: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", contact: "คุณประเสริฐ", phone: "089-345-6789", dept: "แผงโซลล่าเซลล์+อินเวอร์เตอร์", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 5, totalValue: 285000 },
-  { id: "C003", name: "ห้างหุ้นส่วน สยามกรีน", tier: "ผู้รับเหมา", contact: "คุณสุรพล", phone: "062-456-7890", dept: "ทุกแผนก", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 15, totalValue: 2100000 },
-  { id: "C004", name: "นาย สมบัติ โชคดี (Founder)", tier: "Founder", contact: "คุณสมบัติ", phone: "090-567-8901", dept: "แผงโซลล่าเซลล์", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 42, totalValue: 8200000 },
-  { id: "C005", name: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", tier: "Dealer", contact: "คุณมณีรัตน์", phone: "083-678-9012", dept: "ครบชุด", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 19, totalValue: 3600000 },
+  { id: "C001", name: "บริษัท ซันพาวเวอร์ โซลูชั่น จำกัด", tier: "Dealer", contact: "คุณอรุณ", phone: "081-234-5678", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 28, totalValue: 4850000 },
+  { id: "C002", name: "คุณประเสริฐ วงศ์สว่าง", tier: "ทั่วไป", contact: "คุณประเสริฐ", phone: "089-345-6789", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 5, totalValue: 285000 },
+  { id: "C003", name: "ห้างหุ้นส่วน สยามกรีน", tier: "ผู้รับเหมา", contact: "คุณสุรพล", phone: "062-456-7890", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 15, totalValue: 2100000 },
+  { id: "C004", name: "นาย สมบัติ โชคดี (Founder)", tier: "Founder", contact: "คุณสมบัติ", phone: "090-567-8901", salesOwner: "สมศักดิ์ รักดี", status: "active", totalOrders: 42, totalValue: 8200000 },
+  { id: "C005", name: "บริษัท กรีนโฮม เอ็นจิเนียริ่ง จำกัด", tier: "Dealer", contact: "คุณมณีรัตน์", phone: "083-678-9012", salesOwner: "วิภา สุขใจ", status: "active", totalOrders: 19, totalValue: 3600000 },
 ];
 
 export const mockSalesOrders = [

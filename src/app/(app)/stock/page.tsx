@@ -7,10 +7,11 @@ import { formatCurrency, formatNumber } from "@/lib/utils";
 import { useRole } from "@/components/layout/role-context";
 import { useStockNav } from "@/components/layout/stock-nav-context";
 import { useErpStore, type ReturnRec, type Product, type Supplier, type PurchaseOrder, type SalesOrder } from "@/components/layout/erp-store-context";
-import { Package, Truck, FileText, History, AlertTriangle, Plus, Search, X, ChevronRight, ArrowUpRight, ArrowDownLeft, RotateCcw, Edit2, PackageCheck, SlidersHorizontal, Undo2, CheckCircle2, Eye, Info, BarChart2 } from "lucide-react";
+import { Package, Truck, FileText, History, AlertTriangle, Plus, Search, X, ChevronRight, ArrowUpRight, ArrowDownLeft, RotateCcw, Edit2, PackageCheck, SlidersHorizontal, Undo2, CheckCircle2, Eye, Info, BarChart2, LayoutDashboard } from "lucide-react";
 import { BahtSign } from "@/components/ui/baht-sign";
+import { StockDashboard } from "@/components/dashboards/dept-dashboards";
 
-type Tab = "products" | "suppliers" | "po" | "gr" | "adjust" | "return" | "log" | "cost";
+type Tab = "dashboard" | "products" | "suppliers" | "po" | "gr" | "adjust" | "return" | "log" | "cost";
 
 export default function StockPage() {
   const { config, role } = useRole();
@@ -32,6 +33,7 @@ export default function StockPage() {
 
   // Movement Log ถูกจัดไว้เป็นเมนูสุดท้าย
   const allTabs: { key: Tab; label: string; icon: React.ElementType; desc: string; roles?: string[] }[] = [
+    { key: "dashboard", label: "ภาพรวม", icon: LayoutDashboard, desc: "Dashboard สต็อก — ภาพรวมคลังสินค้าและการแจ้งเตือน", roles: ["admin"] },
     { key: "products", label: "สินค้า", icon: Package, desc: "รายการสินค้า ต้นทุน และสต็อกคงเหลือ", roles: ["admin", "sales", "stock"] },
     { key: "suppliers", label: "ผู้ขาย", icon: Truck, desc: "ข้อมูลผู้ขายและเงื่อนไขการชำระเงิน" },
     { key: "po", label: "Purchase Order", icon: FileText, desc: "ใบสั่งซื้อและสถานะการรับเข้า", roles: ["admin", "stock"] },
@@ -92,6 +94,11 @@ export default function StockPage() {
   // เนื้อหาตาราง + แผงรายละเอียด (ใช้ร่วมทุก layout)
   const contentArea = (
     <div className="flex gap-4">
+      {tab === "dashboard" ? (
+        <div className="flex-1 min-w-0 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-[var(--shadow-sm)] overflow-hidden">
+          <StockDashboard />
+        </div>
+      ) : (
       <div className="flex-1 min-w-0 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-[var(--shadow-sm)] overflow-hidden">
         {tab === "products" && (
           <ProductTable
@@ -105,11 +112,12 @@ export default function StockPage() {
         {tab === "suppliers" && <SupplierTable search={search} showFinancial={isAccounting || role === "admin"} />}
         {tab === "po" && <POTable search={search} canReceive={!stockReadOnly} />}
         {tab === "gr" && <GoodsReceiptTable search={search} canSeeCost={canSeeCost} />}
-        {tab === "adjust" && <StockAdjustmentTable search={search} canApprove={role === "admin" || role === "stock"} />}
+        {tab === "adjust" && <StockAdjustmentTable search={search} canApprove={role === "admin"} />}
         {tab === "return" && <ReturnInspectionTable search={search} canInspect={!stockReadOnly} canApprove={role === "admin"} />}
         {tab === "cost" && <AvgCostReport search={search} canSeeCost={canSeeCost} />}
         {tab === "log" && <MovementLogTable search={search} />}
       </div>
+      )}
 
       {tab === "products" && selectedProduct && (
         <ProductDetailPanel
@@ -164,21 +172,23 @@ export default function StockPage() {
         )}
 
         {/* ── ทุกสิทธิ์: เมนูย่อยอยู่ในแถบซ้าย → เนื้อหาเต็มความกว้าง ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent)" }}>
-              <currentTab.icon size={17} style={{ color: "var(--primary)" }} />
+        {tab !== "dashboard" && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent)" }}>
+                <currentTab.icon size={17} style={{ color: "var(--primary)" }} />
+              </div>
+              <div>
+                <h2 className="text-[0.95rem] font-700 leading-tight">{currentTab.label}</h2>
+                <p className="text-[0.72rem] text-[var(--muted-foreground)]">{currentTab.desc}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-[0.95rem] font-700 leading-tight">{currentTab.label}</h2>
-              <p className="text-[0.72rem] text-[var(--muted-foreground)]">{currentTab.desc}</p>
+            <div className="flex items-center gap-2">
+              {searchBox}
+              {actionButton}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {searchBox}
-            {actionButton}
-          </div>
-        </div>
+        )}
         {contentArea}
       </div>
 
@@ -405,9 +415,11 @@ function ProductTable({
 }
 
 function SupplierTable({ search, showFinancial }: { search: string; showFinancial?: boolean }) {
-  const { suppliers, updateSupplier } = useErpStore();
+  const { suppliers, updateSupplier, products } = useErpStore();
   const [editing, setEditing] = useState<Supplier | null>(null);
-  const data = suppliers.filter(s => s.name.includes(search) || s.category.includes(search));
+  // หมวดสินค้าของผู้ขาย = รวมหมวดของสินค้าที่ผู้ขายรายนั้นเป็นเจ้าของ (คำนวณอัตโนมัติ รองรับหลายหมวด)
+  const catsOf = (id: string) => [...new Set(products.filter(p => p.supplier === id).map(p => p.category))];
+  const data = suppliers.filter(s => s.name.includes(search) || catsOf(s.id).some(c => c.includes(search)));
   const baseHeaders = ["รหัส", "ชื่อบริษัท", "ผู้ติดต่อ", "เบอร์โทร", "หมวดสินค้า", "เงื่อนไขชำระ", "สถานะ"];
   const financialHeaders = ["เลขนิติบุคคล", "บัญชีธนาคาร"];
   const headers = showFinancial ? [...baseHeaders, ...financialHeaders, ""] : [...baseHeaders, ""];
@@ -435,7 +447,13 @@ function SupplierTable({ search, showFinancial }: { search: string; showFinancia
                 <td className="px-4 py-3 font-500">{s.name}</td>
                 <td className="px-4 py-3">{s.contact}</td>
                 <td className="px-4 py-3 text-[var(--muted-foreground)]">{s.phone}</td>
-                <td className="px-4 py-3"><Badge variant="secondary">{s.category}</Badge></td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1">
+                    {catsOf(s.id).length > 0
+                      ? catsOf(s.id).map(c => <Badge key={c} variant="secondary">{c}</Badge>)
+                      : <span className="text-[0.72rem] text-[var(--muted-foreground)]">—</span>}
+                  </div>
+                </td>
                 <td className="px-4 py-3">{s.paymentTerm}</td>
                 <td className="px-4 py-3">{statusBadge(s.status)}</td>
                 {showFinancial && (
@@ -1522,13 +1540,12 @@ function AddProductModal({ suppliers, onClose, onSubmit }: {
 function AddSupplierModal({ onClose, onSubmit, supplier }: {
   onClose: () => void;
   supplier?: Supplier;
-  onSubmit: (s: { name: string; contact: string; phone: string; email: string; category: string; paymentTerm: string; taxId: string; bank: string }) => void;
+  onSubmit: (s: { name: string; contact: string; phone: string; email: string; paymentTerm: string; taxId: string; bank: string }) => void;
 }) {
   const [name, setName] = useState(supplier?.name ?? "");
   const [contact, setContact] = useState(supplier?.contact ?? "");
   const [phone, setPhone] = useState(supplier?.phone ?? "");
   const [email, setEmail] = useState(supplier?.email ?? "");
-  const [category, setCategory] = useState(supplier?.category ?? PRODUCT_CATEGORIES[0]);
   const [paymentTerm, setPaymentTerm] = useState(supplier?.paymentTerm ?? "30 วัน");
   const [taxId, setTaxId] = useState(supplier?.taxId ?? "");
   const [bank, setBank] = useState(supplier?.bank ?? "");
@@ -1540,21 +1557,14 @@ function AddSupplierModal({ onClose, onSubmit, supplier }: {
       title={editing ? "แก้ไขข้อมูลผู้ขาย" : "เพิ่มผู้ขาย (Supplier)"}
       subtitle={editing ? supplier!.name : "เพิ่มข้อมูลผู้ขายและเงื่อนไขการชำระเงิน"}
       onClose={onClose} submitLabel={editing ? "บันทึกการแก้ไข" : "เพิ่มผู้ขาย"} disabled={invalid}
-      onSubmit={() => onSubmit({ name, contact, phone, email, category, paymentTerm, taxId, bank })}
+      onSubmit={() => onSubmit({ name, contact, phone, email, paymentTerm, taxId, bank })}
     >
       <Field label="ชื่อบริษัท" required><input className={inputCls} value={name} onChange={e => setName(e.target.value)} placeholder="เช่น บริษัท โซลาร์ไทย จำกัด" /></Field>
       <div className="grid grid-cols-2 gap-3.5">
         <Field label="ผู้ติดต่อ" required><input className={inputCls} value={contact} onChange={e => setContact(e.target.value)} /></Field>
         <Field label="เบอร์โทร" required><input className={inputCls} value={phone} onChange={e => setPhone(e.target.value)} /></Field>
       </div>
-      <div className="grid grid-cols-2 gap-3.5">
-        <Field label="อีเมล"><input className={inputCls} value={email} onChange={e => setEmail(e.target.value)} /></Field>
-        <Field label="หมวดสินค้า">
-          <select className={inputCls} value={category} onChange={e => setCategory(e.target.value)}>
-            {PRODUCT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </Field>
-      </div>
+      <Field label="อีเมล"><input className={inputCls} value={email} onChange={e => setEmail(e.target.value)} /></Field>
       <div className="grid grid-cols-2 gap-3.5">
         <Field label="เงื่อนไขชำระ">
           <select className={inputCls} value={paymentTerm} onChange={e => setPaymentTerm(e.target.value)}>
