@@ -48,13 +48,13 @@ export default function StockPage() {
   const lowStock = products.filter(p => p.stock <= p.reorderPoint);
 
   // ปุ่ม "สร้าง/เพิ่ม" ต้องตรงกับงานของแต่ละแท็บ — Movement Log เป็น audit trail แก้ไม่ได้ จึงไม่มีปุ่ม
+  // Return ไม่มีปุ่มสร้างในหน้าสต๊อก — ใบขอคืนสร้างโดยเซลล์เท่านั้น สต๊อกทำได้แค่รับของและตรวจสภาพ
   const createLabel: Partial<Record<Tab, string>> = {
     products: "เพิ่มสินค้า",
     suppliers: "เพิ่มผู้ขาย",
     po: "สร้าง PO",
     gr: "รับสินค้า (GR)",
     adjust: "ปรับยอดสต็อก",
-    return: "บันทึกรับคืน",
   };
 
   // ── ชิ้นส่วนที่ใช้ร่วม: ค้นหา + ปุ่ม action ──
